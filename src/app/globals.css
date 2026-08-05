@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-navy-950: #0b1226;
+  --color-navy-800: #132244;
+  --color-navy-600: #1f3a5f;
+  --color-gold-500: #c9962c;
+  --color-gold-400: #d4a843;
+  --color-gold-100: #fdf3dc;
+  --color-star-white: #f8f7f2;
+  --color-cream-100: #faf7f0;
+  --color-cream-200: #f3ede1;
+  --color-charcoal-700: #2b2b2b;
+
+  /* Cooking guide accents */
+  --color-blue-accent-100: #e6f0fb;
+  --color-blue-accent-200: #cfe2f6;
+  --color-blue-accent-300: #a8c9ee;
+  --color-blue-accent-400: #6ba3dd;
+  --color-blue-accent-500: #3f80c4;
+  --color-blue-accent-600: #2f669f;
+  --color-blue-accent-700: #28537f;
+  --color-orange-accent-100: #fdeede;
+  --color-orange-accent-200: #fbdab4;
+  --color-orange-accent-300: #f6bc83;
+  --color-orange-accent-400: #ef9450;
+  --color-orange-accent-500: #e1762c;
+  --color-orange-accent-600: #c25c1e;
+  --color-orange-accent-700: #9e4919;
+
+  --font-display: var(--font-fraunces), 'Fraunces', Georgia, serif;
+  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+html {
+  font-family: var(--font-sans);
+}
+
+@keyframes rainbow-reveal {
+  0% { opacity: 0; }
+  100% { opacity: 0.48; }
+}
+
+@keyframes hero-copy-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer-slide {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
