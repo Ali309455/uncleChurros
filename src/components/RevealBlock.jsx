@@ -2,11 +2,12 @@
 
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 
-export default function RevealBlock({ children, delay = 0 }) {
+export default function RevealBlock({ children, delay = 0, className = '' }) {
   const { ref, visible } = useScrollReveal()
   return (
     <div
       ref={ref}
+      className={className}
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateY(0)' : 'translateY(28px)',

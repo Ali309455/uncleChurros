@@ -93,7 +93,7 @@ export default function Shop() {
         {filtered.length === 0 ? (
           <p className="text-center text-charcoal-700/40 py-20 text-lg">No products found.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-7">
             {filtered.map((product) => (
               <ProductCard key={product.id} product={product} onAdd={addToCart} variant="light" />
             ))}

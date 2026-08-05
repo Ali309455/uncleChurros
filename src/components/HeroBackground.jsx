@@ -273,7 +273,7 @@ export default function HeroBackground() {
         <svg
           viewBox="0 0 1440 520"
           preserveAspectRatio="xMidYMax meet"
-          className="w-full"
+          className="w-[160%] -ml-[30%] sm:w-full sm:ml-0"
           style={{ display: 'block' }}
           aria-hidden="true"
         >

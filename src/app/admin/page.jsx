@@ -7,7 +7,7 @@ import { useStore } from '@/components/StoreProvider'
 import LoginForm from '@/components/LoginForm'
 import { Spinner, OrderRowSkeleton, ProductRowSkeleton } from '@/components/ui'
 import {
-  getRates, createLabel, testConnection, syncOrderToShipStation,
+  getRates, createLabel, syncOrderToShipStation,
   trackingUrl, carrierLabel,
 } from '@/services/shipstation'
 
@@ -363,17 +363,15 @@ export default function Admin() {
   const [productSearch, setProductSearch] = useState('')
 
   const [newProduct, setNewProduct] = useState({
-    name: '', category: 'churros',
-    price: '', price6plus: '', weight: '', description: '', image: '',
+    name: '', category: 'churros', price: '', price6plus: '', parkPrice: '',
+    rating: '', reviewCount: '', weight: '', description: '', image: '',
+    available: true, featured: false,
   })
   const [formErrors, setFormErrors] = useState({})
 
-  // ShipStation credentials
+  // ShipStation credentials (demo mode when empty)
   const [ssKey, setSsKey] = useState('')
   const [ssSecret, setSsSecret] = useState('')
-  const [ssConnected, setSsConnected] = useState(null)
-  const [ssTesting, setSsTesting] = useState(false)
-  const [ssConnectError, setSsConnectError] = useState('')
   const [shipFrom, setShipFrom] = useState(DEFAULT_FROM)
 
   // Single-order shipping panel
@@ -479,10 +477,16 @@ export default function Admin() {
   const validateProduct = () => {
     const e = {}
     if (!newProduct.name.trim()) e.name = 'Required'
-    if (!newProduct.price || isNaN(+newProduct.price)) e.price = 'Valid price required'
-    if (!newProduct.price6plus || isNaN(+newProduct.price6plus)) e.price6plus = 'Required'
+    if (newProduct.available) {
+      if (!newProduct.price || isNaN(+newProduct.price)) e.price = 'Valid price required'
+      if (!newProduct.price6plus || isNaN(+newProduct.price6plus)) e.price6plus = 'Required'
+    }
     if (!newProduct.weight.trim()) e.weight = 'Required'
     if (!newProduct.description.trim()) e.description = 'Required'
+    if (newProduct.rating !== '' && (isNaN(+newProduct.rating) || +newProduct.rating < 0 || +newProduct.rating > 5))
+      e.rating = '0–5'
+    if (newProduct.reviewCount !== '' && (isNaN(+newProduct.reviewCount) || +newProduct.reviewCount < 0))
+      e.reviewCount = 'Invalid'
     return e
   }
 
@@ -495,13 +499,19 @@ export default function Admin() {
     }
     const product = {
       id: Date.now(), name: newProduct.name, category: newProduct.category,
-      price: +newProduct.price, price6plus: +newProduct.price6plus, weight: newProduct.weight,
+      price: newProduct.available ? +newProduct.price : null,
+      price6plus: newProduct.available ? +newProduct.price6plus : null,
+      parkPrice: newProduct.parkPrice !== '' ? +newProduct.parkPrice : null,
+      rating: newProduct.rating !== '' ? +newProduct.rating : 4.9,
+      reviewCount: newProduct.reviewCount !== '' ? +newProduct.reviewCount : 124,
+      weight: newProduct.weight,
       description: newProduct.description,
       image: newProduct.image || 'https://images.unsplash.com/photo-1767489386700-cb3dbcbab13d?w=480&h=600&fit=crop&auto=format',
-      featured: false,
+      available: newProduct.available,
+      featured: newProduct.featured,
     }
     addProduct(product)
-    setNewProduct({ name: '', category: 'churros', price: '', price6plus: '', weight: '', description: '', image: '' })
+    setNewProduct({ name: '', category: 'churros', price: '', price6plus: '', parkPrice: '', rating: '', reviewCount: '', weight: '', description: '', image: '', available: true, featured: false })
     setFormErrors({})
     setShowAddPanel(false)
     showToast(`"${product.name}" added to catalogue`)
@@ -517,11 +527,17 @@ export default function Admin() {
     </div>
   )
 
-  const settingsField = (label, value, onChange, placeholder = '', type = 'text') => (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-[11px] font-semibold uppercase tracking-wider text-star-white/40">{label}</label>
-      <input type={type} value={value} placeholder={placeholder} onChange={(e) => onChange(e.target.value)}
-        className="bg-navy-950/60 border border-star-white/10 rounded-lg px-3 py-2.5 text-star-white text-[13px] placeholder:text-star-white/20 outline-none focus:border-gold-500/50 transition-colors font-mono" />
+  const formToggle = (key, label, hint = '') => (
+    <div className="flex items-center justify-between gap-3">
+      <div>
+        <label className="text-[11px] font-semibold uppercase tracking-wider text-star-white/50">{label}</label>
+        {hint && <p className="text-star-white/30 text-[11px] mt-0.5">{hint}</p>}
+      </div>
+      <button type="button" onClick={() => setNewProduct((p) => ({ ...p, [key]: !p[key] }))}
+        aria-pressed={newProduct[key]}
+        className={`relative w-10 h-5 rounded-full transition-colors duration-200 flex-shrink-0 ${newProduct[key] ? 'bg-gold-500' : 'bg-star-white/15'}`}>
+        <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${newProduct[key] ? 'left-5' : 'left-0.5'}`} />
+      </button>
     </div>
   )
 
@@ -549,10 +565,6 @@ export default function Admin() {
       key: 'products', label: 'Products',
       icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /></svg>,
     },
-    {
-      key: 'settings', label: 'Settings',
-      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>,
-    },
   ]
 
   // Admin gate — mirrors the original: non-admin visitors see the login screen
@@ -572,11 +584,6 @@ export default function Admin() {
           <span className="text-star-white/20 mx-0.5">/</span>
           <span className="text-star-white/50 text-sm">Admin</span>
         </div>
-        {ssConnected === true && (
-          <div className="hidden sm:flex items-center gap-1.5 text-[12px] text-green-400/70">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />ShipStation
-          </div>
-        )}
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full bg-gold-500/20 border border-gold-500/30 flex items-center justify-center text-gold-500 text-[11px] font-bold">
             {user.name.charAt(0).toUpperCase()}
@@ -613,9 +620,6 @@ export default function Admin() {
                 <span className={`text-[13px] font-medium whitespace-nowrap overflow-hidden transition-all duration-200 ${sidebarCollapsed ? 'w-0 opacity-0' : 'w-0 sm:w-auto opacity-0 sm:opacity-100'}`}>
                   {item.label}
                 </span>
-                {item.key === 'settings' && ssConnected === true && !sidebarCollapsed && (
-                  <span className="hidden sm:block ml-auto w-1.5 h-1.5 rounded-full bg-green-400/70" />
-                )}
               </button>
             ))}
           </nav>
@@ -823,85 +827,6 @@ export default function Admin() {
               </div>
             </div>
           )}
-
-          {/* ══ SETTINGS TAB ══ */}
-          {tab === 'settings' && (
-            <div className="max-w-2xl mx-auto">
-              <div className="mb-6">
-                <h1 className="text-star-white text-xl sm:text-2xl" style={{ fontFamily: 'var(--font-display)' }}>Settings</h1>
-                <p className="text-star-white/40 text-[13px] mt-0.5">Configure integrations and store preferences</p>
-              </div>
-              <div className="bg-navy-800/40 border border-star-white/6 rounded-2xl overflow-hidden mb-4">
-                <div className="px-5 sm:px-6 py-5 border-b border-star-white/6 flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-[#00A4B4]/15 border border-[#00A4B4]/25 flex items-center justify-center flex-shrink-0">
-                    {shipIcon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-star-white font-medium text-[14px]">ShipStation</p>
-                    <p className="text-star-white/40 text-[12px]">Labels, rate shopping &amp; bulk fulfillment</p>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[12px] flex-shrink-0">
-                    {ssConnected === true  && <><span className="w-2 h-2 rounded-full bg-green-400 inline-block" /><span className="text-green-400">Connected</span></>}
-                    {ssConnected === false && <><span className="w-2 h-2 rounded-full bg-red-400 inline-block" /><span className="text-red-400">Failed</span></>}
-                    {ssConnected === null  && <span className="text-star-white/30 hidden sm:block">Not configured</span>}
-                  </div>
-                </div>
-                <div className="px-5 sm:px-6 py-5 flex flex-col gap-5">
-                  <p className="text-star-white/45 text-[13px] leading-relaxed">
-                    Connect ShipStation to enable rate shopping, label creation, and bulk fulfillment from the Orders tab.{' '}
-                    <a href="https://ship12.shipstation.com/settings/api" target="_blank" rel="noopener noreferrer" className="text-[#00A4B4] hover:text-[#00bdd0] transition-colors">Get API keys →</a>
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {settingsField('API Key', ssKey, setSsKey, 'ShipStation API key')}
-                    {settingsField('API Secret', ssSecret, setSsSecret, '••••••••', 'password')}
-                  </div>
-                  <div className="flex flex-col sm:flex-row items-start gap-3">
-                    <button disabled={ssTesting || !ssKey.trim() || !ssSecret.trim()}
-                      onClick={async () => {
-                        setSsTesting(true)
-                        setSsConnectError('')
-                        const result = await testConnection(ssKey, ssSecret)
-                        setSsConnected(result.ok)
-                        setSsTesting(false)
-                        if (result.ok) showToast('ShipStation connected')
-                        else setSsConnectError(result.error ?? 'Connection failed')
-                      }}
-                      className="flex items-center gap-2 bg-[#00A4B4]/15 hover:bg-[#00A4B4]/25 disabled:opacity-50 border border-[#00A4B4]/30 text-[#00A4B4] text-[13px] font-semibold px-4 py-2 rounded-lg transition-all">
-                      {ssTesting ? <><Spinner size={13} /> Testing…</> : 'Test Connection'}
-                    </button>
-                    {ssConnectError && <p className="text-red-400/80 text-[12px] self-center">{ssConnectError}</p>}
-                  </div>
-                  <div className="bg-amber-500/8 border border-amber-500/18 rounded-xl px-4 py-3">
-                    <p className="text-amber-300/75 text-[12px] leading-relaxed">
-                      <span className="font-semibold text-amber-300">Note:</span> Direct browser calls are blocked by CORS in production — proxy through your backend. Demo mode simulates all responses locally.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-navy-800/40 border border-star-white/6 rounded-2xl overflow-hidden">
-                <div className="px-5 sm:px-6 py-5 border-b border-star-white/6">
-                  <p className="text-star-white font-medium text-[14px]">Ship-From Address</p>
-                  <p className="text-star-white/40 text-[12px] mt-0.5">Sender address on shipping labels</p>
-                </div>
-                <div className="px-5 sm:px-6 py-5 flex flex-col gap-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {settingsField('Business name', shipFrom.name, (v) => setShipFrom((f) => ({ ...f, name: v })))}
-                    {settingsField('Phone', shipFrom.phone, (v) => setShipFrom((f) => ({ ...f, phone: v })))}
-                  </div>
-                  {settingsField('Street address', shipFrom.street1, (v) => setShipFrom((f) => ({ ...f, street1: v })))}
-                  <div className="grid grid-cols-1 sm:grid-cols-[1fr_72px_96px] gap-3">
-                    {settingsField('City', shipFrom.city, (v) => setShipFrom((f) => ({ ...f, city: v })))}
-                    {settingsField('State', shipFrom.state, (v) => setShipFrom((f) => ({ ...f, state: v })))}
-                    {settingsField('ZIP', shipFrom.postalCode, (v) => setShipFrom((f) => ({ ...f, postalCode: v })))}
-                  </div>
-                  <button onClick={() => showToast('Ship-from address saved')}
-                    className="self-start bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold text-[13px] px-4 py-2 rounded-lg transition-all">
-                    Save address
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </main>
       </div>
 
@@ -930,10 +855,25 @@ export default function Admin() {
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-xl border border-star-white/8 bg-navy-800/30 p-3">
+                  {formToggle('available', 'Available for sale', 'Off = Coming Soon')}
+                </div>
+                <div className="rounded-xl border border-star-white/8 bg-navy-800/30 p-3">
+                  {formToggle('featured', 'Feature on home', 'Shows in hero grid')}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
                 {formField('price', 'Regular price ($)', 'number', '12.99')}
                 {formField('price6plus', 'Bulk price 6+ ($)', 'number', '11.69')}
               </div>
-              {formField('weight', 'Weight / pack size', 'text', '6 churros · 480g')}
+              <div className="grid grid-cols-2 gap-3">
+                {formField('parkPrice', 'Park price ($)', 'number', '94.95 — for Save $')}
+                {formField('rating', 'Rating (0–5)', 'number', '4.9')}
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {formField('weight', 'Weight / pack size', 'text', '6 churros · 480g')}
+                {formField('reviewCount', 'Review count', 'number', '124')}
+              </div>
               {formField('image', 'Image URL', 'url', 'https://images.unsplash.com/…')}
               <div className="flex flex-col gap-1">
                 <label className="text-[11px] font-semibold uppercase tracking-wider text-star-white/50">Description</label>
@@ -1011,10 +951,7 @@ export default function Admin() {
                 {!ssKey && !labelResult && (
                   <div className="bg-amber-500/8 border border-amber-400/20 rounded-xl p-3">
                     <p className="text-amber-300/80 text-[12px] leading-relaxed">
-                      <span className="font-semibold text-amber-300">Demo mode</span> — simulated rates.{' '}
-                      <button onClick={() => { setShippingOrderId(null); setTab('settings') }} className="text-gold-400 underline underline-offset-2">
-                        Connect ShipStation →
-                      </button>
+                      <span className="font-semibold text-amber-300">Demo mode</span> — simulated rates are being used.
                     </p>
                   </div>
                 )}
@@ -1131,13 +1068,11 @@ export default function Admin() {
                               {isSel && <div className="w-1.5 h-1.5 rounded-full bg-navy-950" />}
                             </div>
                             <div>
-                              <div className="flex items-center gap-2">
                                 <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${CARRIER_COLORS[svc.carrier] ?? 'text-star-white/40 bg-star-white/5 border-star-white/10'}`}>{carrierLabel(svc.carrier)}</span>
                                 <span className={`text-[13px] font-medium ${isSel ? 'text-gold-400' : 'text-star-white'}`}>{svc.name.replace(/^(USPS|UPS|FedEx)\s+/i, '')}</span>
                               </div>
                               <p className="text-star-white/35 text-[11px] mt-0.5">Est. {svc.days} business day{svc.days !== 1 ? 's' : ''}</p>
-                            </div>
-                          </button>
+                            </button>
                         )
                       })}
                     </div>

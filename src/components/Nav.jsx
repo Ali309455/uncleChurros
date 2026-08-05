@@ -28,8 +28,11 @@ export default function Nav() {
           className="flex items-center gap-2 text-star-white hover:opacity-85 transition-opacity"
           aria-label="Uncle Walt's Churros — home"
         >
-          <span className="text-gold-500 text-xl select-none" aria-hidden="true" style={{ fontFamily: 'var(--font-display)' }}>✦</span>
-          <span className="text-lg font-semibold tracking-tight leading-none" style={{ fontFamily: 'var(--font-display)' }}>Uncle Walt&apos;s</span>
+          <img
+            src="/logo.png"
+            alt="Uncle Walt's Churros"
+            className="h-9 w-9 object-contain"
+          />
         </button>
 
         {/* Desktop links */}

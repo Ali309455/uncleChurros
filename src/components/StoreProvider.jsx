@@ -2,7 +2,9 @@
 
 import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 import { mockOrders } from '@/data/orders'
+import { mockReviews } from '@/data/reviews'
 import { products as initialProducts } from '@/data/products'
+import { createReviewRecord, updateReviewRecord } from '@/lib/reviews'
 import { cartSubtotal, cartQuantity } from '@/utils/cart'
 
 const StoreContext = createContext(null)
@@ -13,6 +15,7 @@ export function StoreProvider({ children }) {
   const [user, setUser] = useState(null)
   const [orders, setOrders] = useState(mockOrders)
   const [products, setProducts] = useState(initialProducts)
+  const [reviews, setReviews] = useState(mockReviews)
 
   const addToCart = useCallback((product, qty) => {
     setCart((prev) => {
@@ -54,6 +57,7 @@ export function StoreProvider({ children }) {
           qty: i.quantity,
           price: i.price,
           image: i.image,
+          productId: i.id,
         })),
         subtotal,
         discount,
@@ -103,6 +107,23 @@ export function StoreProvider({ children }) {
     setUser(null)
   }, [])
 
+  const submitReview = useCallback(
+    (productId, input, orderId) => {
+      const order = orders.find((o) => o.id === orderId)
+      if (!user || !order) return null
+      const review = createReviewRecord({ productId, user, order, ...input })
+      setReviews((prev) => [review, ...prev])
+      return review
+    },
+    [orders, user]
+  )
+
+  const updateReview = useCallback((reviewId, input) => {
+    setReviews((prev) =>
+      prev.map((r) => (r.id === reviewId ? updateReviewRecord(r, input) : r))
+    )
+  }, [])
+
   const value = useMemo(
     () => ({
       cart,
@@ -111,6 +132,7 @@ export function StoreProvider({ children }) {
       user,
       orders,
       products,
+      reviews,
       addToCart,
       updateQty,
       placeOrder,
@@ -119,6 +141,8 @@ export function StoreProvider({ children }) {
       addProduct,
       deleteProduct,
       toggleFeatured,
+      submitReview,
+      updateReview,
       login,
       logout,
     }),
@@ -128,6 +152,7 @@ export function StoreProvider({ children }) {
       user,
       orders,
       products,
+      reviews,
       addToCart,
       updateQty,
       placeOrder,
@@ -136,6 +161,8 @@ export function StoreProvider({ children }) {
       addProduct,
       deleteProduct,
       toggleFeatured,
+      submitReview,
+      updateReview,
       login,
       logout,
     ]

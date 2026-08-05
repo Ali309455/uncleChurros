@@ -7,9 +7,10 @@ import { useStore } from '@/components/StoreProvider'
 const BG_STARS = Array.from({ length: 55 }, (_, i) => {
   const s = (n) => {
     const x = Math.sin(i * 11.3 + n) * 10000
-    return x - Math.floor(x)
+    const v = x - Math.floor(x)
+    return Math.round(v * 100000) / 100000
   }
-  return { x: s(1) * 100, y: s(2) * 100, size: s(3) > 0.75 ? 2.2 : s(3) > 0.45 ? 1.4 : 0.8, opacity: 0.12 + s(4) * 0.32, gold: i % 13 === 0 }
+  return { x: s(1) * 100, y: s(2) * 100, size: s(3) > 0.75 ? 2.2 : s(3) > 0.45 ? 1.4 : 0.8, opacity: +(0.12 + s(4) * 0.32).toFixed(4), gold: i % 13 === 0 }
 })
 
 export default function Signup() {

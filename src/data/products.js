@@ -31,7 +31,7 @@ export const products = [
     category: 'churros',
     price: 75,
     price6plus: 75,
-    parkPrice: 89.95,
+    parkPrice: 94.95,
     weight: '1 Dozen (12 pieces)',
     description:
       'Our signature 15-inch park-quality churros drizzled with slow-cooked dulce de leche and a whisper of flaked sea salt. Flash-frozen for freshness and easy to prepare at home — a premium theme-park treat for a fraction of the park price.',

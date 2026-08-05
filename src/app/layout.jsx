@@ -22,6 +22,9 @@ export const metadata = {
   },
   description:
     'The same 15-inch churros served at Disneyland — flash-frozen, free shipping, just $65 a dozen. Bring the Magic Home™.',
+  icons: {
+    icon: '/logo.png',
+  },
 }
 
 export default function RootLayout({ children }) {
