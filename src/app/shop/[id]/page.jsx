@@ -45,7 +45,10 @@ export default function ProductPage() {
           href="/shop"
           className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold px-6 py-3 rounded-full text-sm transition-all duration-150"
         >
-          ← Back to Shop
+          <svg className="inline-block w-4 h-4 mr-1.5 -translate-y-px" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M19 12H5M11 18l-6-6 6-6"/>
+          </svg>
+          Back to Shop
         </Link>
       </div>
     )
@@ -73,9 +76,12 @@ export default function ProductPage() {
         <div className="max-w-6xl mx-auto">
           <Link
             href="/shop"
-            className="text-star-white/50 hover:text-star-white text-[12px] font-medium tracking-wide transition-colors"
+            className="group inline-flex items-center text-star-white/50 hover:text-star-white text-[12px] font-medium tracking-wide transition-colors"
           >
-            ← Shop
+            <svg className="w-3.5 h-3.5 mr-1 transition-transform duration-200 group-hover:-translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M19 12H5M11 18l-6-6 6-6"/>
+            </svg>
+            Shop
           </Link>
           <h1
             className="text-star-white text-2xl sm:text-3xl mt-2"

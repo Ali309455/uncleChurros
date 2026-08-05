@@ -33,6 +33,7 @@ export default function Nav() {
             alt="Uncle Walt's Churros"
             className="h-9 w-9 object-contain"
           />
+          <span className="font-bold text-lg tracking-tight">Uncle <span className="text-gold-400">Walt's</span></span>
         </button>
 
         {/* Desktop links */}

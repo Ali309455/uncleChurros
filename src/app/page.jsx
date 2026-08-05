@@ -117,9 +117,12 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-3 items-center mt-8">
             <button
               onClick={() => go('/shop')}
-              className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold text-base px-8 py-3.5 rounded-full transition-all duration-150 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-gold-500/25"
+              className="group bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold text-base px-8 py-3.5 rounded-full transition-all duration-150 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-gold-500/25"
             >
-              Shop the Churros →
+              Shop the Churros
+              <svg className="inline-block w-4 h-4 ml-1.5 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 5l7 7-7 7"/>
+              </svg>
             </button>
             <button
               onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
@@ -275,9 +278,12 @@ export default function Home() {
               </div>
               <button
                 onClick={() => go('/shop')}
-                className="hidden sm:block text-sm font-medium text-navy-600 hover:text-gold-500 transition-colors"
+                className="group hidden sm:inline-flex items-center text-sm font-medium text-navy-600 hover:text-gold-500 transition-colors"
               >
-                View all →
+                View all
+                <svg className="w-4 h-4 ml-1 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M13 5l7 7-7 7"/>
+                </svg>
               </button>
             </div>
           </RevealBlock>
@@ -297,9 +303,12 @@ export default function Home() {
           <div className="mt-8 sm:hidden">
             <button
               onClick={() => go('/shop')}
-              className="w-full py-3 text-sm font-medium text-navy-600 border border-navy-600/20 rounded-xl hover:bg-navy-600/5 transition-colors"
+              className="group w-full py-3 text-sm font-medium text-navy-600 border border-navy-600/20 rounded-xl hover:bg-navy-600/5 transition-colors"
             >
-              View full catalogue →
+              View full catalogue
+              <svg className="inline-block w-4 h-4 ml-1.5 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 5l7 7-7 7"/>
+              </svg>
             </button>
           </div>
         </div>
@@ -410,6 +419,7 @@ export default function Home() {
               alt="Uncle Walt's Churros"
               className="h-10 w-10 object-contain"
             />
+            <span className="font-bold text-xl tracking-tight text-star-white">Uncle <span className="text-gold-400">Walt's</span></span>
           </div>
           <div className="flex gap-6 text-[13px]">
             <button onClick={() => go('/shop')} className="text-star-white/40 hover:text-star-white/70 transition-colors">Shop</button>

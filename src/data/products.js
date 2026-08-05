@@ -55,36 +55,36 @@ export const products = [
     featured: false,
     available: true,
   },
-  {
-    id: 4,
-    name: 'Powdered Sugar Beignets',
-    category: 'beignets',
-    price: null,
-    price6plus: null,
-    parkPrice: null,
-    weight: 'Coming soon',
-    description:
-      'Fluffy, golden-fried beignets snowed under a cloud of powdered sugar — a New Orleans classic done the Uncle Walt\u2019s way. Flash-frozen and ready to fry at home. Pricing coming soon.',
-    image:
-      'https://images.unsplash.com/photo-1573050329989-9c2509328687?w=800&h=600&fit=crop&auto=format',
-    featured: false,
-    available: false,
-  },
-  {
-    id: 5,
-    name: 'Golden Chimichanga Burritos',
-    category: 'chimichangas',
-    price: null,
-    price6plus: null,
-    parkPrice: null,
-    weight: 'Coming soon',
-    description:
-      'Golden, deep-fried burritos with a savory seasoned filling — the perfect savory companion to our churros. Flash-frozen and ready to crisp at home. Pricing coming soon.',
-    image:
-      'https://images.unsplash.com/photo-1731090389603-d63060ee08a6?w=800&h=600&fit=crop&auto=format',
-    featured: false,
-    available: false,
-  },
+  // {
+  //   id: 4,
+  //   name: 'Powdered Sugar Beignets',
+  //   category: 'beignets',
+  //   price: null,
+  //   price6plus: null,
+  //   parkPrice: null,
+  //   weight: 'Coming soon',
+  //   description:
+  //     'Fluffy, golden-fried beignets snowed under a cloud of powdered sugar — a New Orleans classic done the Uncle Walt\u2019s way. Flash-frozen and ready to fry at home. Pricing coming soon.',
+  //   image:
+  //     'https://images.unsplash.com/photo-1573050329989-9c2509328687?w=800&h=600&fit=crop&auto=format',
+  //   featured: false,
+  //   available: false,
+  // },
+  // {
+  //   id: 5,
+  //   name: 'Golden Chimichanga Burritos',
+  //   category: 'chimichangas',
+  //   price: null,
+  //   price6plus: null,
+  //   parkPrice: null,
+  //   weight: 'Coming soon',
+  //   description:
+  //     'Golden, deep-fried burritos with a savory seasoned filling — the perfect savory companion to our churros. Flash-frozen and ready to crisp at home. Pricing coming soon.',
+  //   image:
+  //     'https://images.unsplash.com/photo-1731090389603-d63060ee08a6?w=800&h=600&fit=crop&auto=format',
+  //   featured: false,
+  //   available: false,
+  // },
 ]
 
 export const featuredProducts = products.filter((p) => p.featured)
