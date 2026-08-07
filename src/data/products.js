@@ -26,8 +26,8 @@ export const products = [
   },
   {
     id: 2,
-    name: 'Dulce de Leche Churros',
-    category: 'churros',
+    name: 'Disney Beignets',
+    category: 'beignets',
     price: 75,
     price6plus: 75,
     parkPrice: 94.95,
@@ -35,14 +35,14 @@ export const products = [
     description:
       'Our signature 15-inch park-quality churros drizzled with slow-cooked dulce de leche and a whisper of flaked sea salt. Flash-frozen for freshness and easy to prepare at home — a premium theme-park treat for a fraction of the park price.',
     image:
-      '/DulcedeLecheChurros.png',
+      '/beignets.png',
     featured: true,
     available: true,
   },
   {
     id: 3,
-    name: 'Chocolate Dipped Churros',
-    category: 'churros',
+    name: "Disney's Chimichanga Burritos",
+    category: 'chimichangas',
     price: 70,
     price6plus: 70,
     parkPrice: 84.95,
@@ -50,7 +50,7 @@ export const products = [
     description:
       'Long, golden 15-inch churros finished with a rich chocolate dip and a snowy dusting of cinnamon sugar. The authentic Disneyland-style recipe, frozen for freshness and simple to prepare at home — free shipping on every dozen.',
     image:
-      '/ChocolateDippedChurros.png',
+      '/Chimichanga.png',
     featured: false,
     available: true,
   },
