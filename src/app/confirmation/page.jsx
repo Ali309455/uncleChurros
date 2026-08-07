@@ -6,6 +6,7 @@ import { useStore } from '@/components/StoreProvider'
 import CookingGuide from '@/components/cooking/CookingGuide'
 import { getCategoriesFromOrder } from '@/lib/cooking'
 import { IconBook } from '@/components/cooking/CookingIcons'
+import { ArrowIcon } from '@/components/ui'
 
 export default function OrderConfirmation() {
   const router = useRouter()
@@ -74,13 +75,13 @@ export default function OrderConfirmation() {
             onClick={() => router.push('/shop')}
             className="w-full bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold py-3 rounded-xl transition-all duration-150"
           >
-            Shop Again →
+            Shop Again <ArrowIcon size={14} className="ml-1" />
           </button>
           <button
             onClick={() => router.push('/')}
             className="text-sm text-charcoal-700/50 hover:text-charcoal-700 transition-colors"
           >
-            ← Back to home
+            <span className="inline-flex items-center gap-1"><ArrowIcon dir="left" size={14} /> Back to home</span>
           </button>
         </div>
       </div>

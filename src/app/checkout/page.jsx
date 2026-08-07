@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useStore } from '@/components/StoreProvider'
 import { cartSubtotal, cartQuantity, bulkDiscount, cartTotal } from '@/utils/cart'
+import { ArrowIcon } from '@/components/ui'
 
 const PAYMENT_METHODS = ['COD', 'Stripe']
 
@@ -111,7 +112,7 @@ export default function Checkout() {
               <svg width="12" height="14" viewBox="0 0 12 14" fill="none" aria-hidden="true"><rect x="1" y="5" width="10" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.3"/><path d="M3 5V3.5a3 3 0 0 1 6 0V5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>
               Secure checkout · Your data is never shared
             </div>
-            <button type="button" onClick={() => router.push('/cart')} className="text-sm text-charcoal-700/50 hover:text-charcoal-700 transition-colors text-center">← Back to cart</button>
+            <button type="button" onClick={() => router.push('/cart')} className="text-sm text-charcoal-700/50 hover:text-charcoal-700 transition-colors text-center"><span className="inline-flex items-center gap-1"><ArrowIcon dir="left" size={14} /> Back to cart</span></button>
           </div>
         </form>
 

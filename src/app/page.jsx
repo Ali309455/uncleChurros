@@ -7,6 +7,7 @@ import HeroBackground from '@/components/HeroBackground'
 import ProductCard from '@/components/ProductCard'
 import RevealBlock from '@/components/RevealBlock'
 import { useStore } from '@/components/StoreProvider'
+import { ArrowIcon } from '@/components/ui'
 
 const faqs = [
   {
@@ -32,8 +33,7 @@ const faqs = [
 ]
 
 const birthImages = {
-  churros:
-    'https://images.unsplash.com/photo-1767489386700-cb3dbcbab13d?w=900&h=675&fit=crop&auto=format',
+  churros: '/churros.png',
   park: 'https://images.unsplash.com/photo-1609597254239-d9ace3c0b39c?w=500&h=375&fit=crop&auto=format',
 }
 
@@ -52,72 +52,73 @@ export default function Home() {
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
         <HeroBackground />
         <div
-          className="relative z-10 flex flex-col items-center text-center px-6 pt-24 pb-40 max-w-3xl mx-auto"
+          className="relative z-10 flex flex-col items-center text-center px-6 pt-24 pb-32 sm:pb-40 max-w-sm sm:max-w-3xl mx-auto"
           style={{ animation: 'hero-copy-up 1.1s 0.5s ease both' }}
         >
-          <p className="text-gold-500 text-[11px] font-semibold uppercase tracking-[0.24em] mb-6">
+          <p className="text-gold-500 text-[11px] font-semibold uppercase tracking-[0.24em] mb-5 sm:mb-6">
             Authentic · Frozen Fresh · Free Shipping
           </p>
           <h1
-            className="text-star-white leading-[1.06] mb-6"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(33px, 6.5vw, 62px)', letterSpacing: '-0.01em' }}
+            className="text-star-white leading-[1.08] sm:leading-[1.06] mb-5 sm:mb-6"
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 8vw, 36px)', letterSpacing: '-0.01em' }}
           >
             Bring the Magic Home<sup className="text-[0.4em] align-super">™</sup>
             <br />
             <em className="not-italic" style={{ color: '#D4A843' }}>the exact Disneyland churro.</em>
           </h1>
-          <p className="text-star-white/55 text-lg leading-relaxed mb-8 max-w-xl">
+          <p className="text-star-white/55 text-base sm:text-lg leading-[1.7] sm:leading-relaxed mb-7 sm:mb-8 max-w-[32ch] sm:max-w-xl">
             Authentic 15-inch churros — the same ones served at Disneyland theme parks —
             flash-frozen and shipped free, at just $65 a dozen.
           </p>
 
           {/* Pricing — immediately visible */}
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 rounded-2xl border border-gold-500/25 bg-navy-800/50 backdrop-blur px-6 py-4">
-            <div className="flex items-baseline gap-1">
+          <div className="w-full max-w-[340px] sm:max-w-none flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-center gap-y-5 sm:gap-y-4 sm:gap-x-6 rounded-[22px] sm:rounded-2xl border border-gold-500/20 sm:border-gold-500/25 bg-navy-800/40 sm:bg-navy-800/50 backdrop-blur-md px-7 py-7 sm:px-6 sm:py-4">
+            <div className="order-1 flex items-baseline justify-center gap-1">
               <span
                 className="text-gold-400 font-bold leading-none"
-                style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 6vw, 56px)' }}
+                style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 10vw, 40px)' }}
               >
                 $65
               </span>
               <span className="text-star-white/60 text-sm">/ dozen</span>
             </div>
-            <div className="hidden sm:block h-9 w-px bg-star-white/10" />
-            <div className="text-left">
+            <div className="hidden sm:block h-9 w-px bg-star-white/10 sm:order-2" />
+            <div className="order-4 sm:order-3 text-center sm:text-left">
               <p className="text-gold-400 text-[15px] font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
                 Save $19.95
               </p>
-              <p className="text-star-white/50 text-[12px]">vs. inside the park</p>
+              <p className="text-star-white/50 text-[12px]">vs. buying inside the park</p>
             </div>
-            <div className="hidden sm:block h-9 w-px bg-star-white/10" />
-            <div className="text-left">
-              <p className="text-star-white text-[15px] font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
+            <div className="hidden sm:block h-9 w-px bg-star-white/10 sm:order-4" />
+            <div className="order-2 sm:order-5 text-center sm:text-left">
+              <p className="text-star-white text-[15px] font-semibold tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
                 FREE SHIPPING
               </p>
               <p className="text-star-white/50 text-[12px]">on every order</p>
             </div>
+            <div className="order-3 sm:hidden h-px w-16 bg-star-white/15 mx-auto" />
           </div>
 
           {/* Benefit checklist */}
-          <p className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[13px] text-star-white/60">
-            <span className="inline-flex items-center gap-1.5">
+          <p className="mt-6 sm:mt-4 grid grid-cols-1 min-[400px]:grid-cols-2 gap-x-5 gap-y-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-5 sm:gap-y-1.5 text-[13px] text-star-white/60">
+            <span className="inline-flex items-center justify-center gap-1.5">
               <span className="text-gold-500">✓</span> Same churros as Disneyland
             </span>
-            <span className="inline-flex items-center gap-1.5">
+            <span className="inline-flex items-center justify-center gap-1.5">
               <span className="text-gold-500">✓</span> Approx. 15-inch churros
             </span>
-            <span className="inline-flex items-center gap-1.5">
+            <span className="inline-flex items-center justify-center gap-1.5">
               <span className="text-gold-500">✓</span> 12 pieces per dozen
             </span>
-            <span className="inline-flex items-center gap-1.5">
+            <span className="inline-flex items-center justify-center gap-1.5">
               <span className="text-gold-500">✓</span> Easy to prepare at home
             </span>
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 items-center mt-8">
+          <div className="flex flex-col sm:flex-row gap-3 items-center mt-7 sm:mt-8 w-full sm:w-auto">
             <button
               onClick={() => go('/shop')}
-              className="group bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold text-base px-8 py-3.5 rounded-full transition-all duration-150 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-gold-500/25"
+              className="group w-full sm:w-auto min-h-[48px] sm:min-h-0 bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold text-base px-8 py-4 sm:py-3.5 rounded-full transition-all duration-150 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-gold-500/25"
             >
               Shop the Churros
               <svg className="inline-block w-4 h-4 ml-1.5 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -126,9 +127,9 @@ export default function Home() {
             </button>
             <button
               onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
-              className="text-star-white/50 hover:text-star-white text-sm font-medium transition-colors px-4 py-3"
+              className="w-full sm:w-auto min-h-[44px] sm:min-h-0 text-star-white/50 hover:text-star-white text-sm font-medium transition-colors px-6 sm:px-4 py-4 sm:py-3"
             >
-              Discover the story ↓
+              Discover the story <ArrowIcon dir="down" size={14} className="ml-1" />
             </button>
           </div>
         </div>
@@ -247,9 +248,9 @@ export default function Home() {
               <RevealBlock delay={0.16}>
                 <button
                   onClick={() => go('/shop')}
-                  className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold text-base px-8 py-4 rounded-full transition-all duration-150 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-gold-500/25"
+                  className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold text-base px-4 py-4 rounded-full transition-all duration-150 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-gold-500/25"
                 >
-                  Bring the Magic Home →
+                  Bring the Magic Home <ArrowIcon size={16} className="ml-1.5" />
                 </button>
                 <p className="text-star-white/40 text-[13px] mt-4">
                   Skip the park lines. Park-quality churros, delivered to your door.

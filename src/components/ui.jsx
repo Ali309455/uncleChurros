@@ -4,6 +4,31 @@
 
 // ── Spinner ────────────────────────────────────────────────────────────────
 
+export function ArrowIcon({ dir = 'right', size = 14, className = '' }) {
+  const paths = {
+    right: 'M5 12h14M12 5l7 7-7 7',
+    left: 'M19 12H5M12 19l-7-7 7-7',
+    down: 'M12 5v14M5 12l7 7 7-7',
+    upRight: 'M7 17 17 7M7 7h10v10',
+  }
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`inline-block align-middle flex-shrink-0 ${className}`}
+      aria-hidden="true"
+    >
+      <path d={paths[dir] ?? paths.right} />
+    </svg>
+  )
+}
+
 export function Spinner({ size = 16, color = 'currentColor', className = '' }) {
   return (
     <svg

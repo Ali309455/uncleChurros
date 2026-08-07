@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { useStore } from '@/components/StoreProvider'
 import ReviewSection from '@/components/reviews/ReviewSection'
 import { BUNDLES } from '@/data/products'
+import { ArrowIcon } from '@/components/ui'
 
 function Stars({ rating }) {
   const filled = Math.floor(rating)
@@ -215,7 +216,7 @@ export default function ProductPage() {
                     href="/contact"
                     className="mt-3.5 inline-block text-[13px] text-charcoal-700/55 hover:text-gold-500 transition-colors"
                   >
-                    Need 100 pieces? Call for Special Pricing →
+                    Need 100 pieces? Call for Special Pricing <ArrowIcon size={13} />
                   </Link>
                 </div>
 
@@ -251,7 +252,7 @@ export default function ProductPage() {
                   href="/contact"
                   className="text-[13px] text-charcoal-700/55 hover:text-gold-500 transition-colors"
                 >
-                  Questions or case pricing? Contact us →
+                  Questions or case pricing? Contact us <ArrowIcon size={13} />
                 </Link>
               </div>
             )}

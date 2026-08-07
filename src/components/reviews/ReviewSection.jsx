@@ -8,6 +8,7 @@ import ReviewSummary from './ReviewSummary'
 import ReviewFilters from './ReviewFilters'
 import ReviewList from './ReviewList'
 import ReviewForm from './ReviewForm'
+import { ArrowIcon } from '@/components/ui'
 import StarRating from './StarRating'
 
 /**
@@ -114,7 +115,7 @@ export default function ReviewSection({ productId }) {
                     href="/login"
                     className="mt-4 inline-flex items-center gap-1 text-[14px] font-semibold text-navy-600 hover:text-gold-500 transition-colors"
                   >
-                    Log in to review →
+                    Log in to review <ArrowIcon size={14} />
                   </Link>
                 )}
               </div>

@@ -20,8 +20,7 @@ export const products = [
     weight: '1 Dozen (12 pieces)',
     description:
       'The exact 15-inch churros served at Disneyland theme parks — flash-frozen at peak freshness and shipped free to your door for less than you pay in the park. Golden-crisp outside, soft and pillowy inside, rolled in house-blended cinnamon sugar. Heat and enjoy in minutes.',
-    image:
-      'https://images.unsplash.com/photo-1767489386700-cb3dbcbab13d?w=800&h=600&fit=crop&auto=format',
+    image: '/churros.png',
     featured: true,
     available: true,
   },
@@ -36,7 +35,7 @@ export const products = [
     description:
       'Our signature 15-inch park-quality churros drizzled with slow-cooked dulce de leche and a whisper of flaked sea salt. Flash-frozen for freshness and easy to prepare at home — a premium theme-park treat for a fraction of the park price.',
     image:
-      'https://images.unsplash.com/photo-1652465485267-9398f1495c46?w=800&h=600&fit=crop&auto=format',
+      '/DulcedeLecheChurros.png',
     featured: true,
     available: true,
   },
@@ -51,7 +50,7 @@ export const products = [
     description:
       'Long, golden 15-inch churros finished with a rich chocolate dip and a snowy dusting of cinnamon sugar. The authentic Disneyland-style recipe, frozen for freshness and simple to prepare at home — free shipping on every dozen.',
     image:
-      'https://images.unsplash.com/photo-1515579171902-e0c5f918b32b?w=800&h=600&fit=crop&auto=format',
+      '/ChocolateDippedChurros.png',
     featured: false,
     available: true,
   },

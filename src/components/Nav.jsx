@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useStore } from '@/components/StoreProvider'
+import { ArrowIcon } from '@/components/ui'
 
 export default function Nav() {
   const router = useRouter()
@@ -69,7 +70,7 @@ export default function Nav() {
                   onClick={() => go('/admin')}
                   className="text-sm font-medium text-gold-400/80 hover:text-gold-400 transition-colors"
                 >
-                  Admin ↗
+                  Admin <ArrowIcon dir="upRight" size={12} className="ml-1" />
                 </button>
               )}
               <div className="flex items-center gap-2 border-l border-star-white/10 pl-3">
@@ -148,7 +149,7 @@ export default function Nav() {
             {user ? (
               <>
                 {user.isAdmin && (
-                  <button className="text-left text-sm font-medium text-gold-400" onClick={() => go('/admin')}>Admin Dashboard ↗</button>
+                  <button className="text-left text-sm font-medium text-gold-400 flex items-center" onClick={() => go('/admin')}>Admin Dashboard <ArrowIcon dir="upRight" size={12} className="ml-1" /></button>
                 )}
                 <button className="text-left text-sm font-medium text-star-white/40 hover:text-star-white/70" onClick={logout}>Log out</button>
               </>

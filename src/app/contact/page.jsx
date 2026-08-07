@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { ArrowIcon } from '@/components/ui'
 
 export default function Contact() {
   const router = useRouter()
@@ -144,7 +145,9 @@ export default function Contact() {
                     Sending…
                   </>
                 ) : (
-                  isBulk ? 'Request a Quote →' : 'Send message →'
+                  <span className="inline-flex items-center gap-2">
+                    {isBulk ? 'Request a Quote' : 'Send message'} <ArrowIcon size={15} />
+                  </span>
                 )}
               </button>
             </form>
@@ -211,7 +214,7 @@ export default function Contact() {
             <button
               onClick={() => setIsBulk(true)}
               className="text-gold-400 text-[13px] font-medium hover:text-gold-300 transition-colors flex items-center gap-1">
-              Start a bulk request →
+              Start a bulk request <ArrowIcon size={12} className="ml-1" />
             </button>
           </div>
         </div>

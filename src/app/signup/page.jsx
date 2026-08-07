@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useStore } from '@/components/StoreProvider'
+import { ArrowIcon } from '@/components/ui'
 
 const BG_STARS = Array.from({ length: 55 }, (_, i) => {
   const s = (n) => {
@@ -74,9 +75,9 @@ export default function Signup() {
 
       <div className="relative z-10 w-full max-w-sm">
         <div className="flex flex-col items-center mb-8">
-          <button onClick={() => router.push('/')} className="flex items-center gap-2">
-            <span className="text-gold-500 text-2xl select-none" style={{ fontFamily: 'var(--font-display)' }}>✦</span>
-            <span className="text-star-white text-xl font-semibold tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>Uncle Walt&apos;s</span>
+          <button onClick={() => router.push('/')} className="flex items-center gap-2 text-star-white hover:opacity-85 transition-opacity" aria-label="Uncle Walt's Churros — home">
+            <img src="/logo.png" alt="Uncle Walt's Churros" className="h-9 w-9 object-contain" />
+            <span className="font-bold text-lg tracking-tight">Uncle <span className="text-gold-400">Walt&apos;s</span></span>
           </button>
           <p className="text-star-white/35 text-[11px] uppercase tracking-[0.22em] mt-2">Join the magic</p>
         </div>
@@ -119,13 +120,13 @@ export default function Signup() {
           <p className="text-star-white/30 text-[12px] text-center mt-5">
             Already have an account?{' '}
             <button onClick={() => router.push('/login')} className="text-gold-500 hover:text-gold-400 font-medium transition-colors">
-              Log in →
+              Log in <ArrowIcon size={13} dir="right" />
             </button>
           </p>
         </div>
 
         <button onClick={() => router.push('/')} className="mt-6 text-star-white/30 hover:text-star-white/60 text-[13px] transition-colors flex items-center gap-1 mx-auto">
-          ← Back to home
+          <ArrowIcon dir="left" size={14} /> Back to home
         </button>
       </div>
     </div>

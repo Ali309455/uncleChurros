@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useStore } from '@/components/StoreProvider'
 import LoginForm from '@/components/LoginForm'
-import { Spinner, OrderRowSkeleton, ProductRowSkeleton } from '@/components/ui'
+import { Spinner, OrderRowSkeleton, ProductRowSkeleton, ArrowIcon } from '@/components/ui'
 import {
   getRates, createLabel, syncOrderToShipStation,
   trackingUrl, carrierLabel,
@@ -313,7 +313,7 @@ function OrderRow({
                   </div>
                   <p className="text-star-white text-[12px] font-mono break-all">{order.trackingNumber}</p>
                   <a href={trackingUrl(order.carrier ?? '', order.trackingNumber)} target="_blank" rel="noopener noreferrer"
-                    className="text-gold-400 text-[12px] hover:text-gold-300 transition-colors">Track →</a>
+                    className="text-gold-400 text-[12px] hover:text-gold-300 transition-colors inline-flex items-center">Track <ArrowIcon size={12} className="ml-1" /></a>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
@@ -579,8 +579,8 @@ export default function Admin() {
       {/* Top bar */}
       <header className="bg-navy-950 border-b border-star-white/5 h-14 flex items-center px-4 sm:px-6 gap-3 flex-shrink-0">
         <div className="flex items-center gap-2 mr-auto min-w-0">
-          <span className="text-gold-500 text-lg select-none flex-shrink-0" style={{ fontFamily: 'var(--font-display)' }}>✦</span>
-          <span className="text-star-white font-semibold text-sm tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>Uncle Walt&apos;s</span>
+          <img src="/logo.png" alt="Uncle Walt's Churros" className="h-8 w-8 object-contain flex-shrink-0" />
+          <span className="text-star-white font-semibold text-sm tracking-tight">Uncle <span className="text-gold-400">Walt&apos;s</span></span>
           <span className="text-star-white/20 mx-0.5">/</span>
           <span className="text-star-white/50 text-sm">Admin</span>
         </div>
@@ -930,7 +930,7 @@ export default function Admin() {
                     <p className="text-green-400 text-[11px] uppercase tracking-wider font-semibold mb-2">Already shipped ✓</p>
                     <p className="text-star-white text-[13px] font-mono break-all">{order.trackingNumber}</p>
                     <a href={trackingUrl(order.carrier ?? '', order.trackingNumber)} target="_blank" rel="noopener noreferrer"
-                      className="text-gold-400 text-[12px] hover:text-gold-300 mt-2 inline-block">Track →</a>
+                      className="text-gold-400 text-[12px] hover:text-gold-300 mt-2 inline-flex items-center">Track <ArrowIcon size={12} className="ml-1" /></a>
                   </div>
                 )}
 

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import ProductCard from '@/components/ProductCard'
 import { useStore } from '@/components/StoreProvider'
+import { ArrowIcon } from '@/components/ui'
 
 const CATEGORIES = [
   { key: 'all', label: 'All' },
@@ -123,7 +124,7 @@ export default function Shop() {
               href="mailto:events@unclewalts.com"
               className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold px-6 py-3 rounded-full text-sm transition-all duration-150 whitespace-nowrap"
             >
-              Call for Special Pricing →
+              Call for Special Pricing <ArrowIcon size={14} className="ml-1" />
             </a>
             <a
               href="mailto:events@unclewalts.com"

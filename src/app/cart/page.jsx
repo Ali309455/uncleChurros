@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useStore } from '@/components/StoreProvider'
 import { cartSubtotal, cartQuantity, bulkDiscount, cartTotal } from '@/utils/cart'
+import { ArrowIcon } from '@/components/ui'
 
 export default function Cart() {
   const router = useRouter()
@@ -33,7 +34,7 @@ export default function Cart() {
           onClick={() => go('/shop')}
           className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold px-6 py-3 rounded-full transition-all duration-150"
         >
-          Shop the Churros →
+          Shop the Churros <ArrowIcon size={14} className="ml-1" />
         </button>
       </div>
     )
@@ -153,7 +154,7 @@ export default function Cart() {
             onClick={() => go('/checkout')}
             className="w-full bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold py-3.5 rounded-xl transition-all duration-150 text-base"
           >
-            Checkout →
+            Checkout <ArrowIcon size={14} className="ml-1" />
           </button>
           <button
             onClick={() => go('/shop')}

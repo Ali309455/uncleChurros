@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { BUNDLES, CASE_PACK } from '@/data/products'
+import { ArrowIcon } from '@/components/ui'
 
 const formatPrice = (value) => (value % 1 === 0 ? String(value) : value.toFixed(2))
 
@@ -180,7 +181,7 @@ export default function ProductCard({ product, onAdd, variant = 'light' }) {
                     : 'text-charcoal-700/45 hover:text-gold-500'
                 }`}
               >
-                {CASE_PACK.label} — {CASE_PACK.note} →
+                {CASE_PACK.label} {CASE_PACK.note} <ArrowIcon size={11} className="ml-0.5" />
               </button>
             </div>
           </>
@@ -210,7 +211,7 @@ export default function ProductCard({ product, onAdd, variant = 'light' }) {
                   : 'text-charcoal-700/45 hover:text-gold-500'
               }`}
             >
-              Questions or case pricing? Contact us →
+              Questions or case pricing? Contact us <ArrowIcon size={11} className="ml-0.5" />
             </button>
           </div>
         )}
