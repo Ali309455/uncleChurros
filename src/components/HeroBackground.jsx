@@ -27,6 +27,7 @@ export default function HeroBackground() {
   const sparklesRef = useRef([])
   const mouseRef = useRef({ x: -9999, y: -9999 })
   const animRef = useRef(0)
+  const lastAutoRef = useRef(0)
   const reduced = useSyncExternalStore(subscribeReduced, getReduced, getReducedSSR)
 
   useEffect(() => {
@@ -76,18 +77,14 @@ export default function HeroBackground() {
       }
     }
 
-    const onClick = (e) => {
-      if (reduced) return
-      const rect = canvas.getBoundingClientRect()
-      const mx = e.clientX - rect.left
-      const my = e.clientY - rect.top
+    const burst = (x, y, count) => {
       const hues = [0, 35, 55, 160, 210, 270]
-      for (let i = 0; i < 18; i++) {
-        const angle = (Math.PI * 2 * i) / 18 + Math.random() * 0.4
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + Math.random() * 0.4
         const speed = 1.5 + Math.random() * 3.5
         sparklesRef.current.push({
-          x: mx,
-          y: my,
+          x,
+          y,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed - 1,
           life: 1,
@@ -96,6 +93,12 @@ export default function HeroBackground() {
           hue: hues[Math.floor(Math.random() * hues.length)],
         })
       }
+    }
+
+    const onClick = (e) => {
+      if (reduced) return
+      const rect = canvas.getBoundingClientRect()
+      burst(e.clientX - rect.left, e.clientY - rect.top, 18)
     }
 
     const onMouseLeave = () => {
@@ -113,6 +116,12 @@ export default function HeroBackground() {
 
       const mx = mouseRef.current.x
       const my = mouseRef.current.y
+
+      // — Auto fireworks (slow) —
+      if (!reduced && time - lastAutoRef.current > 2000 + Math.random() * 1000) {
+        lastAutoRef.current = time
+        burst(W * (0.2 + Math.random() * 0.6), H * (0.15 + Math.random() * 0.45), 10)
+      }
 
       // — Draw stars —
       for (const s of starsRef.current) {

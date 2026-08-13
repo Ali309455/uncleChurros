@@ -85,7 +85,7 @@ export default function Home() {
 
             {/* Hanging churro — clickable hero product */}
             <Link
-              href="/shop/1"
+              href="/shop"
               aria-label="Shop the Classic Cinnamon Churros"
               className="hero-churro-enter group relative block outline-none focus-visible:ring-2 focus-visible:ring-gold-400/70 focus-visible:ring-offset-4 focus-visible:ring-offset-navy-950 rounded-3xl"
             >
