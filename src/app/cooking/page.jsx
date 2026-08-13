@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function CookingGuidePage() {
   return (
-    <div className="min-h-screen bg-cream-100 pb-20">
+    <div className="min-h-screen">
       <div className="bg-navy-950 py-16 sm:py-20 px-5 sm:px-8 text-center">
         <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-navy-800 text-gold-400 ring-1 ring-gold-500/25 mb-6">
           <IconBook size={24} />
@@ -27,8 +27,29 @@ export default function CookingGuidePage() {
         </p>
       </div>
 
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-10 sm:pt-12">
-        <CookingGuide />
+      <div className="relative overflow-hidden pb-16 sm:pb-24">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: 'url("/kitchenimage.jpg")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(to bottom, #0b1226 0%, rgba(11,18,38,0.86) 7%, rgba(11,18,38,0.58) 32%, rgba(11,18,38,0.58) 72%, rgba(11,18,38,0.9) 100%)',
+          }}
+          aria-hidden="true"
+        />
+
+        <div className="relative max-w-6xl mx-auto px-5 sm:px-8 pt-10 sm:pt-12">
+          <CookingGuide />
+        </div>
       </div>
     </div>
   )

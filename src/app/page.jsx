@@ -3,11 +3,13 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import HeroBackground from '@/components/HeroBackground'
 import ProductCard from '@/components/ProductCard'
 import RevealBlock from '@/components/RevealBlock'
 import { useStore } from '@/components/StoreProvider'
 import { ArrowIcon } from '@/components/ui'
+import { Sparkles } from 'lucide-react'
 
 const faqs = [
   {
@@ -49,95 +51,74 @@ export default function Home() {
     <div style={{ fontFamily: 'var(--font-sans)' }}>
 
       {/* ══ HERO ══ */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+      <section className="relative min-h-[calc(100dvh-4rem)] flex flex-col overflow-hidden">
         <HeroBackground />
-        <div
-          className="relative z-10 flex flex-col items-center text-center px-6 pt-24 pb-32 sm:pb-40 max-w-sm sm:max-w-3xl mx-auto"
-          style={{ animation: 'hero-copy-up 1.1s 0.5s ease both' }}
-        >
-          <p className="text-gold-500 text-[11px] font-semibold uppercase tracking-[0.24em] mb-5 sm:mb-6">
-            Authentic · Frozen Fresh · Free Shipping
-          </p>
-          <h1
-            className="text-star-white leading-[1.08] sm:leading-[1.06] mb-5 sm:mb-6"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 8vw, 36px)', letterSpacing: '-0.01em' }}
-          >
-            Bring the Magic Home<sup className="text-[0.4em] align-super">™</sup>
-            <br />
-            <em className="not-italic" style={{ color: '#D4A843' }}>the exact Disneyland churro.</em>
-          </h1>
-          <p className="text-star-white/55 text-base sm:text-lg leading-[1.7] sm:leading-relaxed mb-7 sm:mb-8 max-w-[32ch] sm:max-w-xl">
-            Authentic 15-inch churros — the same ones served at Disneyland theme parks —
-            flash-frozen and shipped free, at just $65 a dozen.
-          </p>
 
-          {/* Pricing — immediately visible */}
-          <div className="w-full max-w-[340px] sm:max-w-none flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-center gap-y-5 sm:gap-y-4 sm:gap-x-6 rounded-[22px] sm:rounded-2xl border border-gold-500/20 sm:border-gold-500/25 bg-navy-800/40 sm:bg-navy-800/50 backdrop-blur-md px-7 py-7 sm:px-6 sm:py-4">
-            <div className="order-1 flex items-baseline justify-center gap-1">
-              <span
-                className="text-gold-400 font-bold leading-none"
-                style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 10vw, 40px)' }}
-              >
-                $65
-              </span>
-              <span className="text-star-white/60 text-sm">/ dozen</span>
-            </div>
-            <div className="hidden sm:block h-9 w-px bg-star-white/10 sm:order-2" />
-            <div className="order-4 sm:order-3 text-center sm:text-left">
-              <p className="text-gold-400 text-[15px] font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
-                Save $19.95
-              </p>
-              <p className="text-star-white/50 text-[12px]">vs. buying inside the park</p>
-            </div>
-            <div className="hidden sm:block h-9 w-px bg-star-white/10 sm:order-4" />
-            <div className="order-2 sm:order-5 text-center sm:text-left">
-              <p className="text-star-white text-[15px] font-semibold tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
-                FREE SHIPPING
-              </p>
-              <p className="text-star-white/50 text-[12px]">on every order</p>
-            </div>
-            <div className="order-3 sm:hidden h-px w-16 bg-star-white/15 mx-auto" />
+        <div className="relative z-10 flex-1 w-full max-w-5xl mx-auto grid grid-rows-[1fr_auto] justify-items-center text-center px-5 sm:px-8 pt-12 sm:pt-20 pb-5 sm:pb-8">
+          {/* Top third — text */}
+          <div className="flex flex-col items-center justify-center">
+            <p className="hero-eyebrow text-gold-500 text-[11px] font-semibold uppercase tracking-[0.24em] mb-3 sm:mb-4">
+              Authentic · Frozen Fresh · Free Shipping
+            </p>
+            <h1
+              className="hero-headline text-star-white leading-[1.05] mb-4 sm:mb-5 text-balance"
+              style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.25rem, 4.5vw, 4rem)', letterSpacing: '-0.02em' }}
+            >
+              Bring the Magic Home<sup className="text-[0.4em] align-super">™</sup>
+              <br />
+              <em className="not-italic text-gold-400">the exact Disneyland churro.</em>
+            </h1>
+            <p className="hero-description text-star-white/55 text-base sm:text-lg leading-[1.7] sm:leading-relaxed max-w-[34ch] sm:max-w-xl text-pretty">
+              Authentic 15-inch churros — the same ones served at Disneyland theme parks —
+              flash-frozen and shipped free, at just $65 a dozen.
+            </p>
           </div>
 
-          {/* Benefit checklist */}
-          <p className="mt-6 sm:mt-4 grid grid-cols-1 min-[400px]:grid-cols-2 gap-x-5 gap-y-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-5 sm:gap-y-1.5 text-[13px] text-star-white/60">
-            <span className="inline-flex items-center justify-center gap-1.5">
-              <span className="text-gold-500">✓</span> Same churros as Disneyland
-            </span>
-            <span className="inline-flex items-center justify-center gap-1.5">
-              <span className="text-gold-500">✓</span> Approx. 15-inch churros
-            </span>
-            <span className="inline-flex items-center justify-center gap-1.5">
-              <span className="text-gold-500">✓</span> 12 pieces per dozen
-            </span>
-            <span className="inline-flex items-center justify-center gap-1.5">
-              <span className="text-gold-500">✓</span> Easy to prepare at home
-            </span>
-          </p>
+          {/* Middle third — hanging churro */}
+          <div className="relative w-fit self-center mt-2 sm:mt-4">
+            {/* Soft ambient glow behind the product */}
+            <div
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[115%] aspect-square rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle at 50% 45%, rgba(212,168,67,0.16) 0%, rgba(212,168,67,0.06) 45%, transparent 72%)' }}
+              aria-hidden="true"
+            />
 
-          <div className="flex flex-col sm:flex-row gap-3 items-center mt-7 sm:mt-8 w-full sm:w-auto">
-            <button
-              onClick={() => go('/shop')}
-              className="group w-full sm:w-auto min-h-[48px] sm:min-h-0 bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold text-base px-8 py-4 sm:py-3.5 rounded-full transition-all duration-150 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-gold-500/25"
+            {/* Hanging churro — clickable hero product */}
+            <Link
+              href="/shop/1"
+              aria-label="Shop the Classic Cinnamon Churros"
+              className="hero-churro-enter group relative block outline-none focus-visible:ring-2 focus-visible:ring-gold-400/70 focus-visible:ring-offset-4 focus-visible:ring-offset-navy-950 rounded-3xl"
             >
-              Shop the Churros
-              <svg className="inline-block w-4 h-4 ml-1.5 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M5 12h14M13 5l7 7-7 7"/>
-              </svg>
-            </button>
-            <button
-              onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
-              className="w-full sm:w-auto min-h-[44px] sm:min-h-0 text-star-white/50 hover:text-star-white text-sm font-medium transition-colors px-6 sm:px-4 py-4 sm:py-3"
+              <span className="hero-churro-swing block will-change-transform">
+                <Image
+                  src="/churroplate.png"
+                  alt="Classic cinnamon churro hanging against the night sky"
+                  width={1086}
+                  height={1448}
+                  priority
+                  draggable={false}
+                  sizes="(min-width: 640px) 26vh, 220px"
+                  className="h-[clamp(150px,26vh,320px)] w-auto select-none transition-[filter] duration-300 group-hover:brightness-110 group-hover:drop-shadow-[0_0_28px_rgba(212,168,67,0.3)]"
+                />
+              </span>
+            </Link>
+
+            {/* Sparkle accent — magic at the source */}
+            <Sparkles
+              className="hero-sparkle absolute top-[38%] sm:top-[26%] right-[-42%] sm:right-[-46%] w-4 h-4 sm:w-5 sm:h-5"
+              strokeWidth={1.25}
+              aria-hidden="true"
+            />
+
+            {/* Nostalgia text — below the plate */}
+            <p
+              className="mt-3 text-center text-gold-400 text-[15px] sm:text-base italic whitespace-nowrap drop-shadow-[0_2px_10px_rgba(11,18,38,0.95)]"
+              style={{ fontFamily: 'var(--font-display)' }}
             >
-              Discover the story <ArrowIcon dir="down" size={14} className="ml-1" />
-            </button>
+              Click the Churro for a little nostalgia
+            </p>
           </div>
         </div>
-
-        {/* Hint: click the sky */}
-        <p className="absolute bottom-6 left-1/2 -translate-x-1/2 text-star-white/20 text-[11px] tracking-widest z-10 select-none pointer-events-none">
-          CLICK THE SKY · MOVE TO PUSH STARS
-        </p>
       </section>
 
       {/* ══ PROMO STRIP ══ */}

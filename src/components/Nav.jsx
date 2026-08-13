@@ -39,6 +39,7 @@ export default function Nav() {
 
         {/* Desktop links */}
         <div className="hidden sm:flex items-center gap-7">
+          <button className={linkCls('/')} onClick={() => go('/')}>Home</button>
           <button className={linkCls('/shop')} onClick={() => go('/shop')}>Shop</button>
           <button className={linkCls('/cooking')} onClick={() => go('/cooking')}>Instructions</button>
           <button className={linkCls('/contact')} onClick={() => go('/contact')}>Contact</button>
