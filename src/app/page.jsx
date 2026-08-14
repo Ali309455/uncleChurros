@@ -87,18 +87,18 @@ export default function Home() {
             <Link
               href="/shop"
               aria-label="Shop the Classic Cinnamon Churros"
-              className="hero-churro-enter group relative block outline-none focus-visible:ring-2 focus-visible:ring-gold-400/70 focus-visible:ring-offset-4 focus-visible:ring-offset-navy-950 rounded-3xl"
+              className="hero-churro-enter group relative block w-fit mx-auto outline-none focus-visible:ring-2 focus-visible:ring-gold-400/70 focus-visible:ring-offset-4 focus-visible:ring-offset-navy-950 rounded-3xl"
             >
               <span className="hero-churro-swing block will-change-transform">
                 <Image
-                  src="/churroplate.png"
+                  src="/churro.png"
                   alt="Classic cinnamon churro hanging against the night sky"
-                  width={1086}
-                  height={1448}
+                  width={1024}
+                  height={1536}
                   priority
                   draggable={false}
-                  sizes="(min-width: 640px) 26vh, 220px"
-                  className="h-[clamp(150px,26vh,320px)] w-auto select-none transition-[filter] duration-300 group-hover:brightness-110 group-hover:drop-shadow-[0_0_28px_rgba(212,168,67,0.3)]"
+                  sizes="(min-width: 640px) 34vh, 300px"
+                  className="block h-[clamp(200px,34vh,420px)] w-auto select-none transition-[filter] duration-300 group-hover:brightness-110 group-hover:drop-shadow-[0_0_28px_rgba(212,168,67,0.3)]"
                 />
               </span>
             </Link>
