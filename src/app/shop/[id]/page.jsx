@@ -7,20 +7,9 @@ import Image from 'next/image'
 import { useStore } from '@/components/StoreProvider'
 import ReviewSection from '@/components/reviews/ReviewSection'
 import { BUNDLES } from '@/data/products'
-import { ArrowIcon } from '@/components/ui'
+import { ArrowIcon, Stars, SparkleIcon } from '@/components/ui'
 
-function Stars({ rating }) {
-  const filled = Math.floor(rating)
-  return (
-    <span className="inline-flex items-center gap-0.5 text-gold-500" aria-label={`${rating} out of 5 stars`}>
-      {[0, 1, 2, 3, 4].map((i) => (
-        <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill={i < filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-        </svg>
-      ))}
-    </span>
-  )
-}
+const formatPrice = (value) => (value % 1 === 0 ? String(value) : value.toFixed(2))
 
 export default function ProductPage() {
   const params = useParams()
@@ -33,8 +22,9 @@ export default function ProductPage() {
   if (!product) {
     return (
       <div className="min-h-screen bg-cream-100 flex flex-col items-center justify-center px-6 py-32 text-center">
+        <SparkleIcon size={28} className="text-gold-500 mb-5" />
         <h1
-          className="text-charcoal-700 text-3xl mb-3"
+          className="text-navy-950 text-3xl mb-3"
           style={{ fontFamily: 'var(--font-display)' }}
         >
           Product not found
@@ -44,9 +34,9 @@ export default function ProductPage() {
         </p>
         <Link
           href="/shop"
-          className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-semibold px-6 py-3 rounded-full text-sm transition-all duration-150"
+          className="inline-flex items-center gap-2 bg-navy-600 hover:bg-gold-500 text-white hover:text-navy-950 font-semibold px-6 py-3 rounded-full text-sm transition-all duration-150"
         >
-          <svg className="inline-block w-4 h-4 mr-1.5 -translate-y-px" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M19 12H5M11 18l-6-6 6-6"/>
           </svg>
           Back to Shop
@@ -72,21 +62,25 @@ export default function ProductPage() {
 
   return (
     <div className="min-h-screen bg-cream-100 pb-24">
-      {/* Breadcrumb band */}
-      <div className="bg-navy-950 px-5 sm:px-8 py-8">
+      {/* ══ Header band ══ */}
+      <div className="relative bg-navy-600 px-5 sm:px-8 py-9 sm:py-10 overflow-hidden">
+        <SparkleIcon className="absolute top-6 right-[12%] w-4 h-4 text-gold-400/40" />
         <div className="max-w-6xl mx-auto">
           <Link
             href="/shop"
-            className="group inline-flex items-center text-star-white/50 hover:text-star-white text-[12px] font-medium tracking-wide transition-colors"
+            className="group inline-flex items-center text-white/60 hover:text-white text-[12px] font-medium tracking-wide transition-colors"
           >
             <svg className="w-3.5 h-3.5 mr-1 transition-transform duration-200 group-hover:-translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M19 12H5M11 18l-6-6 6-6"/>
             </svg>
             Shop
           </Link>
+          <p className="text-gold-400 text-[10px] font-semibold uppercase tracking-[0.24em] mt-3 mb-1.5">
+            {product.category}
+          </p>
           <h1
-            className="text-star-white text-2xl sm:text-3xl mt-2"
-            style={{ fontFamily: 'var(--font-display)' }}
+            className="text-white text-2xl sm:text-3xl"
+            style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.015em' }}
           >
             {product.name}
           </h1>
@@ -96,7 +90,7 @@ export default function ProductPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-8 sm:pt-10">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-14 items-start">
           {/* Image */}
-          <div className="relative rounded-2xl overflow-hidden bg-cream-200 shadow-sm lg:sticky lg:top-24">
+          <div className="relative rounded-3xl overflow-hidden bg-white shadow-[0_20px_50px_-24px_rgba(11,18,38,0.3)] border border-navy-600/10 lg:sticky lg:top-24">
             <div className="relative aspect-[4/3]">
               <Image
                 src={product.image}
@@ -106,39 +100,26 @@ export default function ProductPage() {
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
-              {isChurro && isAvailable && (
-                <div className="absolute top-4 left-4 bg-navy-950/90 text-star-white text-xs font-bold px-3 py-1.5 rounded-full leading-none flex items-center gap-1">
-                  ≈ 15 in
-                </div>
-              )}
-              {isAvailable ? (
-                <div className="absolute bottom-4 left-4 bg-gold-500 text-navy-950 text-[11px] font-bold px-3 py-1.5 rounded-full leading-none">
-                  FREE SHIPPING
-                </div>
-              ) : (
-                <div className="absolute bottom-4 left-4 bg-navy-950/90 text-gold-400 text-[11px] font-semibold uppercase tracking-[0.14em] px-3 py-1.5 rounded-full">
-                  Coming Soon
-                </div>
-              )}
+              <div className="absolute top-4 left-4 flex flex-col items-start gap-2">
+                {isChurro && isAvailable && (
+                  <span className="bg-white/92 backdrop-blur-sm text-navy-600 text-xs font-bold px-3 py-1.5 rounded-full leading-none border border-navy-600/10">
+                    ≈ 15 in
+                  </span>
+                )}
+                {isAvailable && (
+                  <span className="bg-navy-600 text-white text-[11px] font-bold uppercase tracking-[0.1em] px-3 py-1.5 rounded-full leading-none">
+                    Free Shipping
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Details */}
           <div className="flex flex-col">
-            <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-gold-500 mb-2">
-              {product.category}
-            </p>
-            <h2
-              className="text-charcoal-700 text-3xl sm:text-4xl leading-tight"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              {product.name}
-            </h2>
-
-            <div className="flex items-center gap-2 mt-2.5">
-              <Stars rating={rating} />
+            <div className="flex items-center gap-2.5">
+              <Stars rating={rating} size={14} />
               <span className="text-[13px] text-charcoal-700/60 font-medium">
                 {rating.toFixed(1)} <span className="text-charcoal-700/40">({reviewCount} Reviews)</span>
               </span>
@@ -151,26 +132,26 @@ export default function ProductPage() {
                 </p>
 
                 {/* Price */}
-                <div className="mt-6 rounded-2xl bg-gold-100 border border-gold-500/30 px-6 py-5">
+                <div className="mt-6 rounded-2xl bg-white border border-navy-600/10 p-6">
                   <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-                    <span className="text-gold-500 font-bold text-3xl leading-none">
-                      ${product.price.toFixed(2)}
+                    <span className="text-navy-950 font-bold text-3xl leading-none">
+                      ${formatPrice(product.price)}
                     </span>
                     <span className="text-charcoal-700/55 text-[12px] font-semibold uppercase tracking-[0.14em]">
                       per dozen
                     </span>
                     {product.parkPrice > 0 && (
-                      <span className="text-charcoal-700/40 text-[13px] line-through">
-                        ${product.parkPrice.toFixed(2)}
+                      <span className="text-charcoal-700/35 text-[13px] line-through">
+                        ${formatPrice(product.parkPrice)}
                       </span>
                     )}
                     {savings > 0 && (
-                      <span className="ml-auto text-[13px] font-bold text-green-700/80">
+                      <span className="ml-auto bg-gold-500 text-navy-950 text-[11px] font-bold uppercase tracking-[0.1em] px-2.5 py-1 rounded-full">
                         Save ${savings.toFixed(2)}
                       </span>
                     )}
                   </div>
-                  <p className="text-[12px] font-semibold text-charcoal-700/60 mt-2 flex items-center gap-1.5">
+                  <p className="text-[12px] font-semibold text-navy-600 mt-3 flex items-center gap-1.5">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <path d="M5 12h14" />
                       <path d="M13 6l6 6-6 6" />
@@ -181,10 +162,10 @@ export default function ProductPage() {
 
                 {/* Bundles */}
                 <div className="mt-6">
-                  <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-navy-600/50 mb-2.5">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-charcoal-700/50 mb-2.5">
                     Available Bundles
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2.5">
                     {BUNDLES.map((b) => {
                       const active = qty === b.dozens
                       return (
@@ -192,21 +173,28 @@ export default function ProductPage() {
                           key={b.dozens}
                           onClick={() => setQty(b.dozens)}
                           aria-pressed={active}
-                          className={`flex-1 flex flex-col items-center gap-0.5 rounded-xl border px-3 py-3 text-center transition-all duration-150 ${
+                          className={`relative flex-1 flex flex-col items-center gap-1 rounded-xl border-2 px-3 py-3.5 text-center transition-all duration-150 ${
                             active
-                              ? 'bg-gold-500/10 border-gold-500/60 shadow-sm'
-                              : 'border-navy-600/15 hover:border-navy-600/35'
+                              ? 'border-navy-600 bg-blue-accent-100 shadow-sm'
+                              : 'border-navy-600/12 bg-white hover:border-navy-600/35'
                           }`}
                         >
-                          <span className="text-[14px] leading-none text-gold-500" aria-hidden="true">
-                            {active ? '◉' : '○'}
-                          </span>
-                          <span className={`text-[13px] font-semibold leading-tight ${active ? 'text-navy-950' : 'text-charcoal-700/70'}`}>
+                          {b.dozens === 2 && (
+                            <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gold-500 text-navy-950 text-[9px] font-bold uppercase tracking-[0.1em] px-2 py-0.5 rounded-full whitespace-nowrap">
+                              Most Popular
+                            </span>
+                          )}
+                          <span className={`text-[14px] font-semibold leading-tight ${active ? 'text-navy-950' : 'text-charcoal-700/70'}`}>
                             {b.label}
                           </span>
-                          <span className="text-[11px] text-charcoal-700/45">
+                          <span className={`text-[11px] ${active ? 'text-navy-600/70' : 'text-charcoal-700/45'}`}>
                             {b.pieces} pieces
                           </span>
+                          {active && (
+                            <span className="text-[11px] font-bold text-navy-600">
+                              ${(product.price * b.dozens).toFixed(0)} total
+                            </span>
+                          )}
                         </button>
                       )
                     })}
@@ -214,32 +202,66 @@ export default function ProductPage() {
 
                   <Link
                     href="/contact"
-                    className="mt-3.5 inline-block text-[13px] text-charcoal-700/55 hover:text-gold-500 transition-colors"
+                    className="mt-3.5 inline-block text-[13px] text-charcoal-700/55 hover:text-gold-700 transition-colors font-medium"
                   >
-                    Need 100 pieces? Call for Special Pricing <ArrowIcon size={13} />
+                    Need 100 pieces? Call for Special Pricing <ArrowIcon size={13} className="ml-0.5" />
                   </Link>
                 </div>
 
                 {/* Add to cart */}
                 <button
                   onClick={handleAdd}
-                  className={`w-full h-12 rounded-xl text-[15px] font-semibold transition-all duration-150 mt-7 ${
+                  className={`w-full h-13 rounded-xl text-[15px] font-semibold transition-all duration-150 mt-7 ${
                     added
-                      ? 'bg-navy-600 text-star-white'
-                      : 'bg-gold-500 hover:bg-gold-400 text-navy-950'
+                      ? 'bg-navy-950 text-white'
+                      : 'bg-navy-600 hover:bg-gold-500 hover:text-navy-950 text-white'
                   }`}
                 >
                   {added
                     ? '✓ Added to cart'
                     : `Add ${qty === 1 ? 'One' : qty === 2 ? 'Two' : 'Three'} ${qty === 1 ? 'Dozen' : 'Dozens'} — $${(product.price * qty).toFixed(2)}`}
                 </button>
+
+                {/* Reassurance */}
+                <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  {[
+                    { label: 'Frozen at peak freshness', icon: 'snowflake' },
+                    { label: 'Cash on delivery available', icon: 'cash' },
+                    { label: 'Ready from frozen in minutes', icon: 'clock' },
+                  ].map((r) => (
+                    <div key={r.label} className="rounded-xl bg-white border border-navy-600/10 px-3.5 py-3 flex items-center gap-2.5">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-navy-600 flex-shrink-0" aria-hidden="true">
+                        {r.icon === 'snowflake' && (
+                          <>
+                            <path d="M12 2v20M4 6l16 12M20 6L4 18" />
+                            <path d="M12 6v4M12 14v4" />
+                          </>
+                        )}
+                        {r.icon === 'cash' && (
+                          <>
+                            <rect x="2" y="6" width="20" height="12" rx="2" />
+                            <circle cx="12" cy="12" r="2.5" />
+                            <path d="M6 12h.01M18 12h.01" />
+                          </>
+                        )}
+                        {r.icon === 'clock' && (
+                          <>
+                            <circle cx="12" cy="12" r="9" />
+                            <path d="M12 7v5l3 2" />
+                          </>
+                        )}
+                      </svg>
+                      <span className="text-[11.5px] font-medium text-charcoal-700/60 leading-tight">{r.label}</span>
+                    </div>
+                  ))}
+                </div>
               </>
             ) : (
               <div className="flex flex-col gap-4 mt-4">
                 <p className="text-charcoal-700/55 text-[15px] leading-relaxed">
                   {product.description}
                 </p>
-                <div className="rounded-2xl bg-gold-100 border border-gold-500/30 px-6 py-5 text-[14px] text-charcoal-700/70">
+                <div className="rounded-2xl bg-gold-100 border border-gold-500/25 px-6 py-5 text-[14px] text-charcoal-700/70">
                   Pricing coming soon — checkout will open when the magic lands.
                 </div>
                 <button
@@ -250,9 +272,9 @@ export default function ProductPage() {
                 </button>
                 <Link
                   href="/contact"
-                  className="text-[13px] text-charcoal-700/55 hover:text-gold-500 transition-colors"
+                  className="text-[13px] text-charcoal-700/55 hover:text-gold-700 transition-colors font-medium"
                 >
-                  Questions or case pricing? Contact us <ArrowIcon size={13} />
+                  Questions or case pricing? Contact us <ArrowIcon size={13} className="ml-0.5" />
                 </Link>
               </div>
             )}
@@ -262,12 +284,12 @@ export default function ProductPage() {
         {/* ══ REVIEWS ══ */}
         <section aria-labelledby="reviews-heading" className="mt-16 sm:mt-20 border-t border-navy-600/10 pt-12 sm:pt-16">
           <div className="mb-8">
-            <p className="text-gold-500 text-[11px] font-semibold uppercase tracking-[0.22em] mb-2">
+            <p className="text-navy-600 text-[11px] font-semibold uppercase tracking-[0.22em] mb-2">
               Trusted by verified customers
             </p>
             <h2
               id="reviews-heading"
-              className="text-charcoal-700 text-2xl sm:text-3xl"
+              className="text-navy-950 text-2xl sm:text-3xl"
               style={{ fontFamily: 'var(--font-display)' }}
             >
               Reviews

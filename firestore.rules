@@ -1,0 +1,48 @@
+rules_version = '2';
+
+// Deploy with: firebase deploy --only firestore:rules
+//
+// Security model:
+//  - Products: public reads; writes restricted to admins (custom claim `admin == true`).
+//  - Orders:   users read/create only their own orders; only admins update them.
+//  - Users:    users read/write their own profile; admins everything.
+//
+// IMPORTANT: order pricing is computed by the client-side OrderService today.
+// Rules cannot recompute totals, so for production enforcement move
+// order creation to a Cloud Function and change orders `create` to admin-only.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.admin == true;
+    }
+
+    // ── users ────────────────────────────────────────────────────────────────
+    match /users/{userId} {
+      allow read, write: if isAdmin() || (isSignedIn() && request.auth.uid == userId);
+    }
+
+    // ── products ─────────────────────────────────────────────────────────────
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ── orders ───────────────────────────────────────────────────────────────
+    match /orders/{orderId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isAdmin() || (isSignedIn() && request.resource.data.userId == request.auth.uid);
+      // Full updates: admins only. Additionally, the order owner may update
+      // ONLY the idempotency bookkeeping fields (emailEvents / updatedAt)
+      // written by OrderService after a successful email send.
+      allow update: if isAdmin()
+        || (isSignedIn() && resource.data.userId == request.auth.uid
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['emailEvents', 'updatedAt']));
+      allow delete: if isAdmin();
+    }
+  }
+}

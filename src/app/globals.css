@@ -1,11 +1,16 @@
 @import 'tailwindcss';
 
 @theme {
+  /* ── Brand palette ────────────────────────────────────────────────
+     Light-first: white/cream surfaces, existing blue family for contrast,
+     gold as a supporting accent. No arbitrary colors in components.    */
   --color-navy-950: #0b1226;
   --color-navy-800: #132244;
   --color-navy-600: #1f3a5f;
   --color-gold-500: #c9962c;
   --color-gold-400: #d4a843;
+  --color-gold-600: #b0811f;
+  --color-gold-700: #8a6517;
   --color-gold-100: #fdf3dc;
   --color-star-white: #f8f7f2;
   --color-cream-100: #faf7f0;
@@ -34,7 +39,25 @@
 
 html {
   font-family: var(--font-sans);
+  scroll-behavior: smooth;
 }
+
+/* Anchor targets clear the sticky nav */
+[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+::selection {
+  background: var(--color-gold-500);
+  color: var(--color-navy-950);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-navy-600);
+  outline-offset: 2px;
+}
+
+/* ── Keyframes ───────────────────────────────────────────────────── */
 
 @keyframes rainbow-reveal {
   0% { opacity: 0; }
@@ -51,11 +74,14 @@ html {
   100% { transform: translateX(200%); }
 }
 
-/* ── Hero product entrance & hanging motion ─────────────────── */
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0) rotate(-1.2deg); }
+  50%      { transform: translateY(-10px) rotate(0.8deg); }
+}
 
-@keyframes hero-churro-enter {
-  0%   { opacity: 0; transform: translateY(56px); }
-  100% { opacity: 1; transform: translateY(0); }
+@keyframes hero-float-slow {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
 }
 
 @keyframes hero-churro-swing {
@@ -63,9 +89,17 @@ html {
   50%      { transform: rotate(1.6deg) translateY(-4px); }
 }
 
-@keyframes hero-churro-swing-mobile {
-  0%, 100% { transform: rotate(-1deg) translateY(0); }
-  50%      { transform: rotate(1deg) translateY(-2px); }
+@keyframes hero-arrow-sway {
+  0%, 100% { opacity: 0.75; transform: rotate(-2deg) translateY(0); }
+  50%      { opacity: 1;    transform: rotate(2deg) translateY(3px); }
+}
+
+@keyframes hero-sparkle-twinkle {
+  0%, 100% { opacity: 0;    transform: scale(0.4) rotate(0deg); }
+  15%      { opacity: 1;    transform: scale(1) rotate(8deg); }
+  45%      { opacity: 0.55; transform: scale(0.85) rotate(-4deg); }
+  70%      { opacity: 0.9;  transform: scale(1.1) rotate(6deg); }
+  100%     { opacity: 0;    transform: scale(0.4) rotate(0deg); }
 }
 
 @keyframes hero-arrow-draw-line {
@@ -78,78 +112,33 @@ html {
   100% { stroke-dashoffset: 0; }
 }
 
-@keyframes hero-arrow-sway {
-  0%, 100% { opacity: 0.75; transform: rotate(-2deg) translateY(0); }
-  50%      { opacity: 1;    transform: rotate(2deg) translateY(3px); }
-}
+/* ── Hero motion classes (light hero) ────────────────────────────── */
 
-@keyframes hero-sparkle-twinkle {
-  0%, 100% { opacity: 0;    transform: scale(0.4); }
-  15%      { opacity: 1;    transform: scale(1); }
-  45%      { opacity: 0.55; transform: scale(0.85); }
-  70%      { opacity: 0.9;  transform: scale(1.1); }
-}
+.hero-eyebrow      { animation: hero-copy-up 0.7s 0.15s ease both; }
+.hero-headline     { animation: hero-copy-up 0.9s 0.3s ease both; }
+.hero-description  { animation: hero-copy-up 0.8s 0.5s ease both; }
+.hero-cta-row      { animation: hero-copy-up 0.7s 0.7s ease both; }
+.hero-float        { animation: hero-float 6s 1.4s ease-in-out infinite both; }
+.hero-float-slow   { animation: hero-float-slow 5.5s 2s ease-in-out infinite both; }
+.hero-sparkle      { animation: hero-sparkle-twinkle 4.5s 2.6s ease-in-out infinite both; }
 
-@keyframes hero-nudge {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-4px); }
-}
-
-.hero-eyebrow      { animation: hero-copy-up 0.7s 0.25s ease both; }
-.hero-headline     { animation: hero-copy-up 0.9s 0.45s ease both; }
-.hero-description  { animation: hero-copy-up 0.8s 0.7s ease both; }
-.hero-churro-enter { animation: hero-churro-enter 0.85s 1.05s cubic-bezier(0.22, 1, 0.36, 1) both; }
-.hero-churro-swing { animation: hero-churro-swing 4.2s 1.9s ease-in-out infinite; transform-origin: 50% -12%; }
-.hero-arrow        { animation: hero-arrow-sway 5s 3.95s ease-in-out infinite both; transform-origin: 50% 8%; }
-.hero-nudge        { animation: hero-nudge 2.8s 3.4s ease-in-out infinite; }
-.hero-cta          { animation: hero-copy-up 0.7s 2.4s ease both; }
-
-.hero-sparkle { animation: hero-sparkle-twinkle 4.5s 2.85s ease-in-out infinite both; }
-
-.hero-arrow-lucide {
-  filter: drop-shadow(0 0 5px rgba(212, 168, 67, 0.4)) drop-shadow(0 2px 14px rgba(212, 168, 67, 0.28));
-}
-.hero-arrow-lucide path {
-  stroke: url(#hero-arrow-grad);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.hero-arrow-lucide path:first-child {
-  stroke-dasharray: 12;
-  stroke-dashoffset: 12;
-  animation: hero-arrow-draw-head 0.55s 2.75s ease-out both;
-}
-.hero-arrow-lucide path:last-child {
-  stroke-dasharray: 20;
-  stroke-dashoffset: 20;
-  animation: hero-arrow-draw-line 1.6s 2.15s ease-in-out both;
-}
-
-.hero-sparkle svg {
-  filter: drop-shadow(0 0 5px rgba(212, 168, 67, 0.55)) drop-shadow(0 0 14px rgba(212, 168, 67, 0.3));
-}
-.hero-sparkle path,
-.hero-sparkle circle {
-  stroke: url(#hero-arrow-grad);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-@media (max-width: 639px) {
-  .hero-churro-swing { animation-name: hero-churro-swing-mobile; }
+/* Curved decorative line draw */
+.hero-curve path {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: hero-arrow-draw-line 1.8s 1.6s ease-out forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   .hero-eyebrow,
   .hero-headline,
   .hero-description,
-  .hero-churro-enter,
-  .hero-churro-swing,
-  .hero-arrow,
-  .hero-arrow-lucide path,
+  .hero-cta-row,
+  .hero-float,
+  .hero-float-slow,
   .hero-sparkle,
-  .hero-nudge,
-  .hero-cta {
+  .hero-curve path {
     animation: none !important;
   }
 }

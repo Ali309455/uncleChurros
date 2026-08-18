@@ -7,6 +7,15 @@ import { products as initialProducts } from '@/data/products'
 import { createReviewRecord, updateReviewRecord } from '@/lib/reviews'
 import { cartSubtotal, cartQuantity } from '@/utils/cart'
 
+// ── Client-side auth (demo store flow) ──────────────────────────────────────
+// No backend involved: sessions are plain in-memory user objects. This mirrors
+// the old Firebase heuristic (email contains "admin"/"walt" ⇒ admin).
+
+function isAdminEmail(email) {
+  const e = String(email || '').toLowerCase()
+  return e.includes('admin') || e.includes('walt')
+}
+
 const StoreContext = createContext(null)
 
 export function StoreProvider({ children }) {
@@ -71,19 +80,31 @@ export function StoreProvider({ children }) {
     [cart]
   )
 
-  const updateOrderStatus = useCallback((orderId, status) => {
-    setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)))
-  }, [])
+  const updateOrderStatus = useCallback(
+    (orderId, status) => {
+      const prev = orders.find((o) => o.id === orderId)
+      if (!prev || prev.status === status) return
+      const updated = { ...prev, status }
+      setOrders((state) => state.map((o) => (o.id === orderId ? updated : o)))
+    },
+    [orders]
+  )
 
-  const updateOrderShipping = useCallback((orderId, tracking, carrier, shipstationOrderId) => {
-    setOrders((prev) =>
-      prev.map((o) =>
-        o.id === orderId
-          ? { ...o, trackingNumber: tracking, carrier, shipstationOrderId, status: 'Dispatched' }
-          : o
-      )
-    )
-  }, [])
+  const updateOrderShipping = useCallback(
+    (orderId, tracking, carrier, shipstationOrderId) => {
+      const prev = orders.find((o) => o.id === orderId)
+      if (!prev) return
+      const updated = {
+        ...prev,
+        trackingNumber: tracking,
+        carrier,
+        shipstationOrderId,
+        status: 'Dispatched',
+      }
+      setOrders((state) => state.map((o) => (o.id === orderId ? updated : o)))
+    },
+    [orders]
+  )
 
   const addProduct = useCallback((p) => {
     setProducts((prev) => [...prev, p])
@@ -99,7 +120,44 @@ export function StoreProvider({ children }) {
     )
   }, [])
 
-  const login = useCallback((u) => {
+  const login = useCallback(async ({ email, password }) => {
+    await new Promise((r) => setTimeout(r, 400))
+    const u = {
+      uid: `u-${Date.now().toString().slice(-6)}`,
+      name: String(email || '').split('@')[0] || 'Guest User',
+      email,
+      isAdmin: isAdminEmail(email),
+    }
+    setUser(u)
+    return u
+  }, [])
+
+  const loginWithGoogle = useCallback(async () => {
+    await new Promise((r) => setTimeout(r, 400))
+    const u = {
+      uid: `g-${Date.now().toString().slice(-6)}`,
+      name: 'Google User',
+      email: 'google.user@gmail.com',
+      isAdmin: false,
+    }
+    setUser(u)
+    return u
+  }, [])
+
+  const register = useCallback(async ({ name, email, password }) => {
+    await new Promise((r) => setTimeout(r, 400))
+    const u = {
+      uid: `u-${Date.now().toString().slice(-6)}`,
+      name: name || String(email || '').split('@')[0],
+      email,
+      isAdmin: isAdminEmail(email),
+    }
+    setUser(u)
+    return u
+  }, [])
+
+  /** Demo-only shortcut — client-side session, no account created. */
+  const demoLogin = useCallback((u) => {
     setUser(u)
   }, [])
 
@@ -144,6 +202,9 @@ export function StoreProvider({ children }) {
       submitReview,
       updateReview,
       login,
+      loginWithGoogle,
+      register,
+      demoLogin,
       logout,
     }),
     [
@@ -164,6 +225,9 @@ export function StoreProvider({ children }) {
       submitReview,
       updateReview,
       login,
+      loginWithGoogle,
+      register,
+      demoLogin,
       logout,
     ]
   )

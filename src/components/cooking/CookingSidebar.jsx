@@ -4,7 +4,7 @@ import { CATEGORY_ICONS } from '@/components/cooking/CookingIcons'
 export default function CookingSidebar({ guides, activeCategory, onSelect }) {
   return (
     <aside className="w-full md:w-64 flex-shrink-0">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-star-white/65 mb-3">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-charcoal-700/50 mb-3">
         Category
       </p>
       <nav className="flex flex-col gap-2" aria-label="Cooking categories">

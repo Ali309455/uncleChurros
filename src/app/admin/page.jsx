@@ -1,15 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useStore } from '@/components/StoreProvider'
 import LoginForm from '@/components/LoginForm'
 import { Spinner, OrderRowSkeleton, ProductRowSkeleton, ArrowIcon } from '@/components/ui'
 import {
-  getRates, createLabel, syncOrderToShipStation,
+  getShippingRates, createShippingLabel, syncToShippingProvider,
   trackingUrl, carrierLabel,
-} from '@/services/shipstation'
+} from '@/lib/shipping'
+
+const PRODUCT_IMAGE_FALLBACK =
+  'https://images.unsplash.com/photo-1767489386700-cb3cbdbab13d?w=480&h=600&fit=crop&auto=format'
 
 const STATUS_STYLES = {
   Placed:     'bg-blue-500/15 text-blue-300 border border-blue-400/25',
@@ -77,6 +80,84 @@ const DEFAULT_FROM = {
   state: 'CA',
   postalCode: '92802',
   phone: '5550001234',
+}
+
+// ── Image upload (drag & drop, images only) ─────────────────────────────────
+
+function ImageDropzone({ value, onChange, onError }) {
+  const inputRef = useRef(null)
+  const [dragging, setDragging] = useState(false)
+  const [uploading, setUploading] = useState(false)
+
+  const handleFiles = async (files) => {
+    const file = files?.[0]
+    if (!file) return
+    onError('')
+    if (!file.type.startsWith('image/')) {
+      onError('Only image files are allowed (JPG, PNG, WEBP, GIF, AVIF, SVG)')
+      return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      onError('Image must be 5 MB or smaller')
+      return
+    }
+    setUploading(true)
+    try {
+      const url = await new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = () => reject(new Error('Could not read the image file'))
+        reader.readAsDataURL(file)
+      })
+      onChange(url)
+    } catch (err) {
+      onError(err?.message || 'Upload failed')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="text-[11px] font-semibold uppercase tracking-wider text-star-white/50">Product image</label>
+
+      {value ? (
+        <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-navy-800 border border-star-white/10">
+          <img src={value} alt="Product preview" className="w-full h-full object-cover" />
+          <button type="button" onClick={() => inputRef.current?.click()}
+            className="absolute bottom-2 right-2 bg-navy-950/80 backdrop-blur border border-star-white/15 hover:border-gold-500/40 text-star-white/80 hover:text-gold-400 text-[12px] font-medium px-2.5 py-1.5 rounded-lg transition-all">
+            Replace
+          </button>
+        </div>
+      ) : (
+        <div
+          onClick={() => inputRef.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={(e) => { e.preventDefault(); setDragging(false); handleFiles(e.dataTransfer.files) }}
+          className={`aspect-[4/3] rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer transition-all text-center px-4 ${dragging ? 'border-gold-500 bg-gold-500/10' : 'border-star-white/15 bg-navy-800/30 hover:border-gold-500/40 hover:bg-navy-800/60'}`}
+        >
+          {uploading ? (
+            <>
+              <Spinner size={20} color="rgba(201,150,44,0.8)" />
+              <p className="text-star-white/50 text-[12px]">Uploading…</p>
+            </>
+          ) : (
+            <>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="text-gold-500/70" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <p className="text-star-white/60 text-[13px] font-medium">Drag &amp; drop an image here</p>
+              <p className="text-star-white/30 text-[11px]">or click to browse · JPG, PNG, WEBP, GIF, AVIF, SVG · max 5 MB</p>
+            </>
+          )}
+        </div>
+      )}
+
+      <input ref={inputRef} type="file" accept="image/*" className="hidden"
+        onChange={(e) => { handleFiles(e.target.files); e.target.value = '' }} />
+    </div>
+  )
 }
 
 function orderWeight(order) {
@@ -368,10 +449,9 @@ export default function Admin() {
     available: true, featured: false,
   })
   const [formErrors, setFormErrors] = useState({})
+  const [uploadError, setUploadError] = useState('')
 
-  // ShipStation credentials (demo mode when empty)
-  const [ssKey, setSsKey] = useState('')
-  const [ssSecret, setSsSecret] = useState('')
+  // Shipping runs in local demo mode — simulated rates and labels
   const [shipFrom, setShipFrom] = useState(DEFAULT_FROM)
 
   // Single-order shipping panel
@@ -458,7 +538,7 @@ export default function Admin() {
         serviceName: svc.name, shipmentCost: 0, otherCost: 0, days: svc.days,
       }
       try {
-        const label = await createLabel(ssKey, ssSecret, order, rate, orderWeight(order), shipFrom)
+        const label = await createShippingLabel(order, rate, orderWeight(order), shipFrom)
         setBulkLabels((prev) => new Map(prev).set(orderId, label))
         updateOrderShipping(orderId, label.trackingNumber, bulkCarrier)
         updateOrderStatus(orderId, 'Dispatched')
@@ -506,13 +586,14 @@ export default function Admin() {
       reviewCount: newProduct.reviewCount !== '' ? +newProduct.reviewCount : 124,
       weight: newProduct.weight,
       description: newProduct.description,
-      image: newProduct.image || 'https://images.unsplash.com/photo-1767489386700-cb3dbcbab13d?w=480&h=600&fit=crop&auto=format',
+      image: newProduct.image || PRODUCT_IMAGE_FALLBACK,
       available: newProduct.available,
       featured: newProduct.featured,
     }
     addProduct(product)
     setNewProduct({ name: '', category: 'churros', price: '', price6plus: '', parkPrice: '', rating: '', reviewCount: '', weight: '', description: '', image: '', available: true, featured: false })
     setFormErrors({})
+    setUploadError('')
     setShowAddPanel(false)
     showToast(`"${product.name}" added to catalogue`)
   }
@@ -736,9 +817,9 @@ export default function Admin() {
                     onExpand={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
                     onSync={async () => {
                       setSyncingId(order.id)
-                      const result = await syncOrderToShipStation(ssKey, ssSecret, order)
+                      const result = await syncToShippingProvider(order)
                       setSyncingId(null)
-                      if (result) showToast(`${order.id} synced to ShipStation`)
+                      if (result) showToast(`${order.id} synced to shipping provider`)
                     }}
                   />
                 ))}
@@ -841,11 +922,8 @@ export default function Admin() {
               <button onClick={() => setShowAddPanel(false)} className="text-star-white/40 hover:text-star-white text-2xl leading-none p-1">×</button>
             </div>
             <form onSubmit={handleAddProduct} className="flex-1 overflow-auto px-5 sm:px-6 py-5 flex flex-col gap-4">
-              {newProduct.image && (
-                <div className="aspect-[4/3] rounded-xl overflow-hidden bg-navy-800">
-                  <img src={newProduct.image} alt="Preview" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none' }} />
-                </div>
-              )}
+              <ImageDropzone value={newProduct.image} onChange={(url) => setNewProduct((p) => ({ ...p, image: url }))} onError={setUploadError} />
+              {uploadError && <p className="text-red-400 text-[11px] -mt-2">{uploadError}</p>}
               {formField('name', 'Product name', 'text', 'e.g. Dulce de Leche Churros')}
               <div className="flex flex-col gap-1">
                 <label className="text-[11px] font-semibold uppercase tracking-wider text-star-white/50">Category</label>
@@ -874,7 +952,6 @@ export default function Admin() {
                 {formField('weight', 'Weight / pack size', 'text', '6 churros · 480g')}
                 {formField('reviewCount', 'Review count', 'number', '124')}
               </div>
-              {formField('image', 'Image URL', 'url', 'https://images.unsplash.com/…')}
               <div className="flex flex-col gap-1">
                 <label className="text-[11px] font-semibold uppercase tracking-wider text-star-white/50">Description</label>
                 <textarea value={newProduct.description} rows={3} placeholder="Short, warm product description…"
@@ -948,7 +1025,7 @@ export default function Admin() {
                   </div>
                 )}
 
-                {!ssKey && !labelResult && (
+                {!labelResult && (
                   <div className="bg-amber-500/8 border border-amber-400/20 rounded-xl p-3">
                     <p className="text-amber-300/80 text-[12px] leading-relaxed">
                       <span className="font-semibold text-amber-300">Demo mode</span> — simulated rates are being used.
@@ -959,7 +1036,7 @@ export default function Admin() {
                 {ssRates.length === 0 && !ssRatesLoading && !labelResult && (
                   <button onClick={async () => {
                     setSsRatesLoading(true)
-                    const rates = await getRates(ssKey, ssSecret, { state: toState, zip: toZip }, wt)
+                    const rates = await getShippingRates({ state: toState, zip: toZip }, wt)
                     setSsRates(rates)
                     setSsRatesLoading(false)
                   }}
@@ -1010,7 +1087,7 @@ export default function Admin() {
                   <button disabled={labelCreating}
                     onClick={async () => {
                       setLabelCreating(true)
-                      const label = await createLabel(ssKey, ssSecret, order, selectedRate, wt, shipFrom)
+                      const label = await createShippingLabel(order, selectedRate, wt, shipFrom)
                       setLabelResult(label)
                       updateOrderShipping(order.id, label.trackingNumber, selectedRate.carrierCode)
                       updateOrderStatus(order.id, 'Dispatched')
